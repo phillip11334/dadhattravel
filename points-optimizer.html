@@ -34,31 +34,29 @@
   /* ---------- TOP NAV ---------- */
   .topnav{
     position:sticky; top:0; z-index:20;
-    display:flex; gap:8px; overflow-x:auto;
+    display:flex; flex-wrap:wrap; gap:8px;
     background:var(--paper);
     padding:10px 0;
     margin:0 0 18px;
     border-bottom:1px solid var(--line);
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
   }
-  .topnav::-webkit-scrollbar{display:none;}
   .topnav a{
     flex:0 0 auto;
     font-family:var(--mono);
     font-size:12px;
     font-weight:700;
     letter-spacing:0.02em;
-    color:var(--ink-2);
-    background:#fff8ec;
-    border:1px solid var(--line);
+    color:#fff8ec;
+    background:linear-gradient(135deg, var(--teal), var(--ink-2));
+    border:1px solid var(--brass);
     border-radius:20px;
     padding:7px 14px;
     text-decoration:none;
     white-space:nowrap;
+    box-shadow:0 2px 0 rgba(0,0,0,0.15);
   }
   .topnav a:hover, .topnav a:active{
-    background:var(--ink); color:var(--paper); border-color:var(--ink);
+    background:linear-gradient(135deg, var(--brass), var(--brass-dark)); color:#fff; border-color:var(--brass-dark);
   }
   section.panel{scroll-margin-top:64px;}
 
@@ -457,17 +455,6 @@
 <body>
 <div class="wrap">
 
-  <nav class="topnav" id="topnav">
-    <a href="#section-cards">Cards</a>
-    <a href="#section-loyalty">Loyalty</a>
-    <a href="#section-ledger">Summary</a>
-    <a href="#section-transfer">Transfer</a>
-    <a href="#section-compare">Compare</a>
-    <a href="#section-alliances">Alliances</a>
-    <a href="#section-trips">Trips</a>
-    <a href="#section-cpp">CPP</a>
-  </nav>
-
   <div class="hero">
     <p class="hero-eyebrow">POINTS &amp; MILES PLANNING TOOL</p>
     <h1>Where should these points go?</h1>
@@ -481,6 +468,17 @@
       <strong>This is a planning tool, not a booking guarantee.</strong> Before you actually move any points: confirm real award availability for your flight or hotel dates first, and confirm the current transfer rate and partner list on the loyalty program and credit card issuer's own site — both can change without notice, and most transfers are final.
     </div>
   </div>
+
+  <nav class="topnav" id="topnav">
+    <a href="#section-cards">My CC Pts</a>
+    <a href="#section-loyalty">Hotel/Airline Pts</a>
+    <a href="#section-ledger">Total Pts</a>
+    <a href="#section-transfer">CC Transfer Partners</a>
+    <a href="#section-compare">Compare Transfer Partners</a>
+    <a href="#section-alliances">Alliances</a>
+    <a href="#section-trips">Points Trip Planner</a>
+    <a href="#section-cpp">CPP Is It Worth It?</a>
+  </nav>
 
   <!-- CARD PORTFOLIO -->
   <section class="panel" id="section-cards">
@@ -499,7 +497,7 @@
         </div>
         <div class="field" id="customCurrencyField" style="display:none;">
           <label>Currency name</label>
-          <input type="text" id="newCardCustomCurrency" placeholder="e.g. Wells Fargo Rewards">
+          <input type="text" id="newCardCustomCurrency" placeholder="e.g. Alaska Mileage Plan">
         </div>
         <div class="field">
           <label>Balance</label>
@@ -675,7 +673,6 @@ const CURRENCY_PRESETS = [
   'Citi ThankYou Points',
   'Capital One Miles',
   'Bilt Rewards',
-  'Wells Fargo Rewards',
 ];
 
 // Default starter balances (only used the very first time, if storage is empty)
@@ -773,7 +770,6 @@ const TRANSFER_MAP = {
     {to:'IHG One Rewards', ratio:1},
     {to:'Wyndham Rewards', ratio:1},
   ],
-  'Wells Fargo Rewards': [],
 };
 
 // Concrete program -> category, used to filter the trip calculator and the overlap matrix.
@@ -1786,7 +1782,6 @@ const PROGRAM_LINKS = {
   'Citi ThankYou Points':'https://www.thankyou.com/',
   'Capital One Miles':'https://www.capitalone.com/rewards/',
   'Bilt Rewards':'https://www.biltrewards.com/',
-  'Wells Fargo Rewards':'https://www.wellsfargo.com/credit-cards/rewards/',
   'Marriott Bonvoy':'https://www.marriott.com/loyalty.mi',
   'World of Hyatt':'https://world.hyatt.com/',
   'Atmos Rewards':'https://www.alaskaair.com/atmosrewards',
