@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dad Hat Travel and Points</title>
+<meta name="description" content="Family travel on points, from a dad of two. The cards I use, trip breakdowns, and free points tools.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== EDIT YOUR COLORS HERE ===== */
+  :root {
+    --navy: #1d2b3a;
+    --sunset: #f26b3a;
+    --sand: #fbf5ec;
+    --card: #ffffff;
+    --ink: #1d2b3a;
+    --muted: #5e6b78;
+    --line: #eadfce;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 48px 0 40px;
+    text-align: center;
+  }
+  .badge {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--sunset);
+    display: grid; place-items: center;
+    margin: 0 auto 16px;
+    font-size: 34px;
+  }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 800;
+    font-size: clamp(28px, 7vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .tagline { margin-top: 10px; color: #c9d3dc; font-size: 17px; }
+  .nav {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin-top: 24px;
+  }
+  .nav a {
+    color: #fff; text-decoration: none; font-weight: 600; font-size: 14px;
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 8px 14px; border-radius: 999px;
+  }
+  .nav a:hover { background: rgba(255,255,255,.1); }
+
+  /* Sections */
+  section { padding: 40px 0 8px; }
+  h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 26px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .sub { color: var(--muted); margin-bottom: 20px; }
+  .intro p + p { margin-top: 12px; }
+
+  .disclosure {
+    background: #fff4ea;
+    border: 1px solid #f6cfb6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #7a3b1d;
+    margin-bottom: 18px;
+  }
+
+  /* Cards */
+  .grid { display: grid; gap: 14px; }
+  .item {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+  .item .tag {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--sunset);
+    margin-bottom: 4px;
+  }
+  .item h3 { font-size: 19px; font-weight: 700; }
+  .item p { color: var(--muted); margin: 6px 0 14px; font-size: 15px; }
+  .btn {
+    display: block; text-align: center; text-decoration: none;
+    background: var(--sunset); color: #fff;
+    font-weight: 700; font-size: 16px;
+    padding: 14px; border-radius: 12px;
+  }
+  .btn:hover { filter: brightness(.95); }
+  .btn.disabled { background: #d8d0c4; pointer-events: none; }
+  .btn.ghost { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
+
+  /* Trip */
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 14px; }
+  .stat { background: var(--sand); border-radius: 10px; padding: 10px 12px; }
+  .stat b { display: block; font-size: 18px; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  /* Glossary */
+  dl { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 6px 18px; }
+  dt { font-weight: 700; padding-top: 12px; }
+  dd { color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--line); font-size: 15px; }
+  dd:last-of-type { border-bottom: 0; }
+
+  footer {
+    margin-top: 48px; padding: 32px 0 40px;
+    background: var(--navy); color: #c9d3dc; font-size: 14px; text-align: center;
+  }
+  footer a { color: #fff; font-weight: 600; }
+  footer p + p { margin-top: 10px; }
+  .fine { font-size: 12px; color: #93a1ae; max-width: 560px; margin: 16px auto 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="badge" aria-hidden="true">🧢</div>
+    <h1>Dad Hat Travel and Points</h1>
+    <p class="tagline">Family travel on points, from a dad of two.</p>
+    <nav class="nav">
+      <a href="#cards">Cards I use</a>
+      <a href="#trips">Trips</a>
+      <a href="#tools">Tools</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="intro" id="start">
+    <h2>Start here</h2>
+    <p>I'm a dad of two who books our family trips with credit card points instead of cash. Flights and hotels for four add up fast, and points are how we keep traveling without blowing the budget.</p>
+    <p>Below are the cards I actually use, breakdowns of our trips, and free tools to help you plan your own.</p>
+  </section>
+
+  <section id="cards">
+    <h2>Cards I use</h2>
+    <p class="sub">Tap a card to see the current offer on the issuer's site.</p>
+    <div class="disclosure">
+      <strong>Heads up:</strong> these are my personal referral links. If you're approved through one, I may earn a bonus. Offers, fees and terms change, so always check the issuer's page before applying.
+    </div>
+
+    <div class="grid">
+      <div class="item">
+        <span class="tag">Premium travel perks</span>
+        <h3>Amex Platinum</h3>
+        <p>Airport lounge access and premium travel benefits. Earns Membership Rewards points that transfer to airline and hotel partners.</p>
+        <a class="btn" href="https://americanexpress.com/en-us/referral/platinum-card?ref=PHILLLpz9U&xl=cp01" target="_blank" rel="noopener sponsored">Apply with my referral</a>
+      </div>
+
+      <div class="item">
+        <span class="tag">Dining &amp; groceries</span>
+        <h3>Amex Gold</h3>
+        <p>Strong earning on everyday family spending like restaurants and groceries. Same Membership Rewards points as the Platinum.</p>
+        <a class="btn" href="https://americanexpress.com/en-us/referral/platinum-card?ref=PHILLLpz9U&xl=cp01" target="_blank" rel="noopener sponsored">Apply with my referral</a>
+      </div>
+
+      <div class="item">
+        <span class="tag">Points on rent</span>
+        <h3>Bilt Palladium</h3>
+        <p>Earn points on rent, plus transfer partners for flights and hotels.</p>
+        <a class="btn" href="https://www.bilt.com/card?invite=ZFGVSXEW" target="_blank" rel="noopener sponsored">Apply with my referral</a>
+      </div>
+
+      <div class="item">
+        <span class="tag">Simple premium card</span>
+        <h3>Capital One Venture X</h3>
+        <p>Easy-to-use travel card with lounge access. Earns Capital One miles that transfer to airline and hotel partners.</p>
+        <a class="btn" href="https://i.capitalone.com/GnG6J46ps" target="_blank" rel="noopener sponsored">Apply with my referral</a>
+      </div>
+
+      <div class="item">
+        <span class="tag">Chase Ultimate Rewards</span>
+        <h3>Chase Sapphire Reserve</h3>
+        <p>Earns Chase Ultimate Rewards points, which transfer to partners like Hyatt and United. The same link also works for the Sapphire Preferred.</p>
+        <a class="btn" href="https://www.referyourchasecard.com/19y/294TND1AJ5" target="_blank" rel="noopener sponsored">Apply with my referral</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="trips">
+    <h2>Trip breakdowns</h2>
+    <p class="sub">Exactly what we paid in points and cash.</p>
+    <div class="grid">
+      <div class="item">
+        <span class="tag">Family of 4</span>
+        <h3>Cabo San Lucas</h3>
+        <!-- TODO: fill in your real Cabo numbers -->
+        <div class="stats">
+          <div class="stat"><b>[X] pts</b><span>Flights</span></div>
+          <div class="stat"><b>[X] nights</b><span>Hotel on points</span></div>
+          <div class="stat"><b>$[X]</b><span>Out of pocket</span></div>
+          <div class="stat"><b>$[X]</b><span>Cash price</span></div>
+        </div>
+        <a class="btn ghost" href="#">Full breakdown coming soon</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="tools">
+    <h2>Free tools</h2>
+    <p class="sub">Calculators I built to plan our trips.</p>
+    <div class="grid">
+      <div class="item">
+        <span class="tag">Calculator</span>
+        <h3>Points optimizer</h3>
+        <p>See which points to use for a trip and how much each point is worth.</p>
+        <!-- TODO: point href to tools/points-optimizer.html once uploaded -->
+        <a class="btn ghost" href="#">Coming soon</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="glossary">
+    <h2>Points glossary</h2>
+    <p class="sub">The lingo, in plain English.</p>
+    <dl>
+      <dt>CPP (cents per point)</dt>
+      <dd>How much each point is worth on a booking. Divide the cash price by the points needed. Higher is better.</dd>
+      <dt>5/24</dt>
+      <dd>Chase's rule: if you've opened 5 or more personal cards from any bank in the last 24 months, you'll usually be denied for new Chase cards.</dd>
+      <dt>Transfer partners</dt>
+      <dd>Airlines and hotels you can move bank points to, often for much more value than cashing them out.</dd>
+      <dt>Award space</dt>
+      <dd>The seats or rooms an airline or hotel actually releases for points bookings. Finding four seats together is the hard part for families.</dd>
+      <dt>Sign-up bonus</dt>
+      <dd>The big batch of points a card gives you after you spend a set amount in the first few months.</dd>
+    </dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <!-- TODO: replace with your real handle and email -->
+    <p>Follow along on Instagram: <a href="https://instagram.com/YOURHANDLE" target="_blank" rel="noopener">@YOURHANDLE</a></p>
+    <p>Brands and partnerships: <a href="mailto:you@example.com">you@example.com</a></p>
+    <p class="fine">This site shares personal experience, not financial advice. Some links are referral links, and I may earn a bonus if you're approved. Only open a card you can pay off in full every month. Card offers, fees and terms change; check the issuer's site for current details.</p>
+  </div>
+</footer>
+
+</body>
+</html>
