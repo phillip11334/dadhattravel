@@ -172,6 +172,21 @@
   .finder + .finder{margin-top:22px; padding-top:20px; border-top:1px dashed var(--line);}
   .finder h3{margin:0 0 2px; font-size:16px;}
   .finder .finder-sub{font-size:12.5px; color:var(--text-dim); margin:0 0 12px;}
+  .ratio-alert{
+    display:block; margin:3px 0 1px; padding:5px 8px;
+    background:#fff3d6; border:1px solid #e6c37a; border-radius:6px;
+    font-size:11.5px; font-weight:500; line-height:1.35; color:#6b4a12;
+  }
+  .ratio-alert.done{background:#f6e2d8; border-color:#e0b49c; color:#7a3218;}
+  .ratio-changed{color:#a4372f !important; font-weight:700;}
+  .reserve-toggle{
+    display:flex; gap:10px; align-items:flex-start; margin-top:14px;
+    padding:10px 12px; border:1px dashed var(--brass); border-radius:8px; background:#fffaf0;
+    font-size:13px; cursor:pointer;
+  }
+  .reserve-toggle input{margin-top:3px; width:18px; height:18px; flex:0 0 auto;}
+  .reserve-toggle small{display:block; color:var(--text-dim); font-size:12px; margin-top:2px;}
+  .matrix-note{font-size:12px; color:#6b4a12; margin-top:8px;}
   .eval-context{
     background:#fff8ec; border:1px solid var(--brass); border-radius:9px;
     padding:10px 14px; margin:0 0 14px; font-size:13.5px;
@@ -587,6 +602,12 @@
         </div>
         <button class="btn" id="addCardBtn">Add balance</button>
       </div>
+      <label class="reserve-toggle" for="chaseReserve">
+        <input type="checkbox" id="chaseReserve">
+        <span>I have a Chase Sapphire Reserve (or Sapphire Reserve for Business)
+          <small>Since Oct 1, 2026, Chase points transfer to Hyatt at 4:3 from the Sapphire Preferred and most other Chase cards. Reserve cardholders keep 1:1. Check this so the Hyatt math matches your card.</small>
+        </span>
+      </label>
     </div>
   </section>
 
@@ -938,8 +959,43 @@ const HOTEL_PROGRAMS = new Set(['Hilton Honors','Marriott Bonvoy','Choice Privil
 function programType(name){
   return HOTEL_PROGRAMS.has(name) ? 'hotel' : 'flight';
 }
+// Transfer ratio changes that depend on the card held or the date. resolveEdge() applies them on top of
+// TRANSFER_MAP, so every tool (pathways, trip calculator, transfer partners, compare) uses the same numbers.
+// Sources: Chase cut Hyatt to 4:3 for Sapphire Preferred and most other Chase cards (Oct 1, 2026 for existing
+// cardholders); Sapphire Reserve keeps 1:1. Bilt to Hyatt moves from 1:1 to 4:3 on Jan 1, 2027.
+let chaseHasReserve = false; // the optimizer sets this from the Step 1 checkbox
+function todayIso(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function resolveEdge(cur, e){
+  if(e.to==='World of Hyatt' && cur==='Chase Ultimate Rewards'){
+    return chaseHasReserve
+      ? {...e, ratio:1, note:null, changed:false,
+         alert:'1:1 because you have a Sapphire Reserve. Since Oct 1, 2026, Sapphire Preferred and most other Chase cards transfer to Hyatt at 4:3.'}
+      : {...e, ratio:0.75, note:'4:3', changed:true,
+         alert:'Changed Oct 1, 2026: Sapphire Preferred and most Chase cards now transfer to Hyatt at 4:3 (1,000 → 750). Sapphire Reserve cardholders keep 1:1.'};
+  }
+  if(e.to==='World of Hyatt' && cur==='Bilt Rewards'){
+    return todayIso() < '2027-01-01'
+      ? {...e, ratio:1, changed:false,
+         alert:'Changing Jan 1, 2027: Bilt to Hyatt drops to 4:3 (1,000 → 750). Transfers are still 1:1 through Dec 31, 2026.'}
+      : {...e, ratio:0.75, note:'4:3', changed:true,
+         alert:'Changed Jan 1, 2027: Bilt to Hyatt is now 4:3 (1,000 → 750). It was 1:1.'};
+  }
+  return e;
+}
+function resolvedEdges(cur){
+  return (TRANSFER_MAP[cur] || []).map(e=>resolveEdge(cur, e));
+}
+function ratioLabel(e){
+  return e.ratio===1 ? '1:1' : (e.note || `${e.ratio}:1`);
+}
+function ratioAlertHtml(e){
+  return e.alert ? `<span class="ratio-alert${e.changed?' done':''}">⚠️ ${escapeHtml(e.alert)}</span>` : '';
+}
 function getConcreteEdges(cur){
-  return (TRANSFER_MAP[cur] || []).filter(e=>!e.generic);
+  return resolvedEdges(cur).filter(e=>!e.generic);
 }
 
 /* ---------------------------------------------------------
@@ -1002,6 +1058,11 @@ async function loadState(){
       return {id:tr.id, name:tr.name, legs:[{id:tid(), type:tr.type||'flight', target:tr.target, points:tr.points}]};
     });
   }catch(e){ trips = []; }
+  try{
+    const r = await window.storage.get('points-tool:chaseReserve', false);
+    chaseHasReserve = r ? r.value==='true' : false;
+  }catch(e){ chaseHasReserve = false; }
+  document.getElementById('chaseReserve').checked = chaseHasReserve;
   try{
     const l = await window.storage.get('points-tool:loyalty', false);
     loyaltyBalances = l ? JSON.parse(l.value) : [];
@@ -1237,15 +1298,15 @@ function renderExplorerSelect(){
 }
 function renderPartnerList(){
   const cur = document.getElementById('explorerCurrency').value;
-  const partners = TRANSFER_MAP[cur] || [];
+  const partners = resolvedEdges(cur);
   const el = document.getElementById('partnerList');
   if(partners.length===0){
     el.innerHTML = `<li><span class="empty-note">No outbound transfer partners — this is redeemed directly as its own currency.</span></li>`;
     return;
   }
   el.innerHTML = partners.map(p=>{
-    const ratioLabel = p.ratio===1 ? '1 : 1' : (p.note || `${p.ratio} : 1`);
-    return `<li><span>${linkedName(p.to)}${p.note && p.ratio===1 ? ` <span class="empty-note">(${escapeHtml(p.note)})</span>`:''}</span><span class="ratio">${ratioLabel}</span></li>`;
+    const label = p.ratio===1 ? '1 : 1' : (p.note || `${p.ratio} : 1`);
+    return `<li><span>${linkedName(p.to)}${p.note && p.ratio===1 ? ` <span class="empty-note">(${escapeHtml(p.note)})</span>`:''}${ratioAlertHtml(p)}</span><span class="ratio${p.changed?' ratio-changed':''}">${label}</span></li>`;
   }).join('');
 }
 
@@ -1428,7 +1489,7 @@ function computeTripOptions(trip){
   const options = [];
   Object.keys(bal).forEach(cur=>{
     if(cur === trip.target) return;
-    const edges = TRANSFER_MAP[cur] || [];
+    const edges = resolvedEdges(cur);
     const edge = edges.find(e=> e.to === trip.target || (e.to==='Most airline partners' && trip.target!==cur));
     if(!edge) return;
     const ratio = edge.ratio;
@@ -1438,6 +1499,8 @@ function computeTripOptions(trip){
       currency:cur,
       ratio,
       note:edge.note,
+      alert:edge.alert,
+      changed:edge.changed,
       have:bal[cur],
       sourceNeeded: sourceNeededForShortfall,
       haveEnough
@@ -1493,9 +1556,9 @@ function renderTrips(){
                 : '';
               optionsHtml = hint + r.options.map((o,i)=>(i>0?'<div class="or-divider">and / or</div>':'') + `
                 <div class="route-option">
-                  <span class="from">${linkedName(o.currency)} <span class="ratio" style="font-family:var(--mono);color:var(--text-dim);">(${o.ratio===1?'1:1':(o.note||o.ratio+':1')})</span></span>
-                  <span class="need ${o.haveEnough?'':'cant'}">${o.haveEnough ? `transfer ${fmt(o.sourceNeeded)}` : `need ${fmt(o.sourceNeeded)}, have ${fmt(o.have)}`}</span>
-                </div>
+                  <span class="from">${linkedName(o.currency)} <span class="ratio${o.changed?' ratio-changed':''}" style="font-family:var(--mono);color:var(--text-dim);">(${o.ratio===1?'1:1':(o.note||o.ratio+':1')})</span></span>
+                  <span class="need ${o.haveEnough?'':'cant'}">${o.haveEnough ? `transfer ${fmt(Math.ceil(o.sourceNeeded))}` : `need ${fmt(Math.ceil(o.sourceNeeded))}, have ${fmt(o.have)}`}</span>
+                </div>${o.alert ? `<div style="margin:-2px 0 6px;">${ratioAlertHtml(o)}</div>` : ''}
               `).join('');
             }
           }
@@ -1859,7 +1922,7 @@ function renderMatrix(){
   selected.forEach(cur=>{
     getConcreteEdges(cur).forEach(e=>{
       destMap[e.to] = destMap[e.to] || {};
-      destMap[e.to][cur] = e.ratio;
+      destMap[e.to][cur] = e;
     });
   });
 
@@ -1882,14 +1945,21 @@ function renderMatrix(){
   }).join('')}</tr>`;
   const body = rows.map(r=>{
     const cells = selected.map(cur=>{
-      const ratio = destMap[r.dest][cur];
-      if(ratio===undefined) return `<td class="cell-no">—</td>`;
-      return `<td class="cell-yes">${ratio===1?'✓':(ratio<1? ratio.toFixed(2):ratio+':1')}</td>`;
+      const e = destMap[r.dest][cur];
+      if(e===undefined) return `<td class="cell-no">—</td>`;
+      const mark = e.alert ? ' ⚠️' : '';
+      return `<td class="cell-yes${e.changed?' ratio-changed':''}" ${e.alert?`title="${escapeHtml(e.alert)}"`:''}>${e.ratio===1?'✓':(e.note || (e.ratio<1? e.ratio.toFixed(2):e.ratio+':1'))}${mark}</td>`;
     }).join('');
     return `<tr class="${r.count>=2?'overlap-row':''}"><td>${linkedName(r.dest)}</td>${cells}</tr>`;
   }).join('');
 
   tableEl.innerHTML = head + body;
+  const alerts = [];
+  selected.forEach(cur=> getConcreteEdges(cur).forEach(e=>{ if(e.alert) alerts.push(`<b>${escapeHtml(cur)} → ${escapeHtml(e.to)}:</b> ${escapeHtml(e.alert)}`); }));
+  let noteEl = document.getElementById('matrixNote');
+  if(!noteEl){ noteEl = document.createElement('div'); noteEl.id = 'matrixNote'; tableEl.parentNode.after(noteEl); }
+  noteEl.className = 'matrix-note';
+  noteEl.innerHTML = alerts.map(a=>`<div>⚠️ ${a}</div>`).join('');
 }
 
 /* ---------------------------------------------------------
@@ -2149,7 +2219,7 @@ function routesInto(program, bal){
     getConcreteEdges(cur).forEach(e=>{
       if(e.to===program){
         const held = bal[cur] || 0;
-        routes.push({cur, ratio:e.ratio, note:e.note, held, yields:Math.floor(held * e.ratio)});
+        routes.push({cur, ratio:e.ratio, note:e.note, alert:e.alert, changed:e.changed, held, yields:Math.floor(held * e.ratio)});
       }
     });
   });
@@ -2161,7 +2231,7 @@ function pathwayCardHtml(r, tag, subject){
   const routeItems = r.routes.map(rt=>{
     const ratio = rt.ratio===1 ? '1:1' : (rt.note || `${rt.ratio}:1`);
     const have = rt.held>0 ? ` · you have ${fmt(rt.held)} → ${fmt(rt.yields)}` : '';
-    return `<li class="${rt.held>0?'held':''}"><span>${linkedName(rt.cur)}${have}</span><span class="ratio">${ratio}</span></li>`;
+    return `<li class="${rt.held>0?'held':''}"><span>${linkedName(rt.cur)}${have}${ratioAlertHtml(rt)}</span><span class="ratio${rt.changed?' ratio-changed':''}">${ratio}</span></li>`;
   });
   if(r.direct>0) routeItems.unshift(`<li class="held"><span>Points already in ${escapeHtml(r.program)}</span><span class="ratio">${fmt(r.direct)}</span></li>`);
   const routesHtml = routeItems.length
@@ -2348,6 +2418,11 @@ renderLoyaltyPresetSelect();
 renderExplorerSelect();
 renderAllianceSelect();
 renderAllianceResult();
+document.getElementById('chaseReserve').addEventListener('change', async (e)=>{
+  chaseHasReserve = e.target.checked;
+  try{ await window.storage.set('points-tool:chaseReserve', String(chaseHasReserve), false); }catch(err){}
+  renderAll();
+});
 renderPathwaySelect();
 renderHotelSelect();
 renderPathways();
