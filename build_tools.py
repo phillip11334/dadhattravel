@@ -56,7 +56,7 @@ TOOLS = [
         'h1': 'Which partner airlines can I book?',
         'lede': 'Pick a US airline and a points currency to see its global alliance and which partner airlines that currency can actually reach.',
         'section': 'section-alliances',
-        'js': between('const ALLIANCE_LINKS = {', 'function renderAll(){'),
+        'js': between('const ALLIANCE_LINKS = {', '/* ---------------------------------------------------------\n   STEP 2: PATHWAY FINDER'),
         'init': 'renderAllianceSelect();\nrenderAllianceResult();',
         'warn': True,
     },

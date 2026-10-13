@@ -113,6 +113,72 @@
   }
   .hero-warning strong{color:var(--brass); font-weight:700;}
 
+  /* ---------- STEP BANNERS ---------- */
+  .step{
+    display:flex; gap:14px; align-items:flex-start;
+    margin:30px 0 14px; padding:0 2px;
+  }
+  .step:first-of-type{margin-top:6px;}
+  .step-num{
+    flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+    background:var(--ink); color:var(--paper); border:2px solid var(--brass);
+    display:grid; place-items:center;
+    font-family:var(--mono); font-weight:800; font-size:17px;
+  }
+  .step-kicker{font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--brass-dark); text-transform:uppercase;}
+  .step h2{margin:2px 0 3px; font-size:22px; line-height:1.2;}
+  .step p{margin:0; color:var(--text-dim); font-size:14px;}
+  .step-wrap{scroll-margin-top:64px;}
+  .next-step{
+    display:flex; justify-content:flex-end; margin:-6px 0 6px;
+  }
+  .next-step a{
+    font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--teal);
+    text-decoration:none; border-bottom:2px solid var(--brass); padding-bottom:1px;
+  }
+  details.more-tools{margin:0 0 20px;}
+  details.more-tools > summary{
+    cursor:pointer; list-style:none;
+    background:#fff8ec; border:1px dashed var(--brass); border-radius:10px;
+    padding:12px 16px; font-weight:700; font-size:14px; color:var(--ink);
+  }
+  details.more-tools > summary::-webkit-details-marker{display:none;}
+  details.more-tools > summary::before{content:"+ "; font-family:var(--mono); color:var(--brass-dark);}
+  details.more-tools[open] > summary::before{content:"− ";}
+  details.more-tools > summary .sum-sub{display:block; font-weight:400; font-size:12.5px; color:var(--text-dim); margin-top:2px;}
+  details.more-tools[open] > summary{margin-bottom:14px;}
+
+  /* ---------- PATHWAY FINDER ---------- */
+  .pathway-filters{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:6px;}
+  .pathway-head{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:14px 0 4px; font-weight:700;}
+  .pathway-list{display:grid; gap:10px; margin-top:12px;}
+  .pathway{
+    border:1px solid var(--line); border-radius:9px; background:#fffefb;
+    padding:12px 14px;
+  }
+  .pathway.reachable{border-color:#2f8f52; box-shadow:inset 4px 0 0 #2f8f52;}
+  .pathway-top{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .pathway-name{font-weight:700; font-size:15px;}
+  .pathway-tag{font-family:var(--mono); font-size:11px; font-weight:700; color:var(--brass-dark); text-transform:uppercase; letter-spacing:.04em;}
+  .pathway-total{font-family:var(--mono); font-size:13px; font-weight:700; color:#1f6b3f; white-space:nowrap;}
+  .pathway-total.none{color:var(--text-dim); font-weight:400;}
+  .pathway-routes{list-style:none; margin:8px 0 0; padding:0; font-size:13px;}
+  .pathway-routes li{display:flex; justify-content:space-between; gap:10px; padding:4px 0; border-top:1px solid var(--paper-2);}
+  .pathway-routes li.held{font-weight:600;}
+  .pathway-routes .ratio{font-family:var(--mono); color:var(--text-dim); font-size:12px; white-space:nowrap;}
+  .pathway-actions{margin-top:10px;}
+  .pathway-actions .btn{padding:7px 12px; font-size:12.5px;}
+  .eval-context{
+    background:#fff8ec; border:1px solid var(--brass); border-radius:9px;
+    padding:10px 14px; margin:0 0 14px; font-size:13.5px;
+  }
+  .eval-context:empty{display:none;}
+  @media (max-width:640px){
+    .topnav a{padding:7px 11px;}
+    .pathway-filters{grid-template-columns:1fr;}
+    .step h2{font-size:19px;}
+  }
+
   /* ---------- SECTION SHELL ---------- */
   section.panel{
     background:#fff8ec;
@@ -464,7 +530,7 @@
   <div class="hero">
     <p class="hero-eyebrow">POINTS &amp; MILES PLANNING TOOL</p>
     <h1>Where should these points go?</h1>
-    <p>Track every card's balance, see your points converted into real airline and hotel currency, and figure out the cheapest transfer route to book a specific trip.</p>
+    <p>Plan a redemption in three steps: know which points you have, find the programs that can book the flight you want, then check whether the redemption is worth it.</p>
     <div class="hero-stats">
       <div class="hero-stat"><div class="n" id="statCards">0</div><div class="l">accounts tracked</div></div>
       <div class="hero-stat"><div class="n" id="statTotal">0</div><div class="l">total points</div></div>
@@ -476,15 +542,21 @@
   </div>
 
   <nav class="topnav" id="topnav">
-    <a href="#section-cards">My CC Pts</a>
-    <a href="#section-loyalty">Hotel/Airline Pts</a>
-    <a href="#section-ledger">Total Pts</a>
-    <a href="#section-transfer">CC Transfer Partners</a>
-    <a href="#section-compare">Compare Transfer Partners</a>
-    <a href="#section-alliances">Alliances</a>
-    <a href="#section-trips">Points Trip Planner</a>
-    <a href="#section-cpp">CPP Is It Worth It?</a>
+    <a href="#step-1">1 · Points</a>
+    <a href="#step-2">2 · Pathways</a>
+    <a href="#step-3">3 · Evaluate</a>
   </nav>
+
+  <div class="step-wrap" id="step-1">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-kicker">Step 1</div>
+        <h2>Identify your points</h2>
+        <p>Which rewards currencies do your cards earn? Add your card points and any airline or hotel balances.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- CARD PORTFOLIO -->
   <section class="panel" id="section-cards">
@@ -555,6 +627,49 @@
     </div>
   </section>
 
+  <div class="next-step"><a href="#step-2">Next: find booking pathways →</a></div>
+
+  <div class="step-wrap" id="step-2">
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-kicker">Step 2</div>
+        <h2>Find booking pathways</h2>
+        <p>Which partner programs might book the airline you want, and which of your points can get there?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATHWAY FINDER -->
+  <section class="panel" id="section-pathways">
+    <div class="panel-head">
+      <div>
+        <h2>Pathway finder</h2>
+        <div class="sub">Pick the airline you want to fly. Partners in the same alliance can usually book its flights too, so you may have more ways in than you think.</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="pathway-filters">
+        <div class="field">
+          <label for="pathAirline">Airline you want to fly</label>
+          <select id="pathAirline"></select>
+        </div>
+        <div class="field">
+          <label for="pathScope">Show</label>
+          <select id="pathScope">
+            <option value="mine">Programs my points can reach</option>
+            <option value="all">Every program that can book it</option>
+          </select>
+        </div>
+      </div>
+      <div id="pathResult"></div>
+      <div class="disclaimer">Alliance partners can generally book each other's flights, but award space released to partners varies by route and date. Some airlines also have one-off partnerships outside their alliance that aren't listed here. Search the partner program's site for real availability before you transfer.</div>
+    </div>
+  </section>
+
+  <details class="more-tools">
+    <summary>More pathway tools<span class="sum-sub">Transfer partners by card, compare card transfer partners, and domestic airline alliances</span></summary>
+
   <!-- TRANSFER EXPLORER -->
   <section class="panel" id="section-transfer">
     <div class="panel-head">
@@ -613,25 +728,22 @@
     </div>
   </section>
 
-  <!-- TRIP PLANNER -->
-  <section class="panel" id="section-trips">
-    <div class="panel-head">
+  </details>
+
+  <div class="next-step"><a href="#step-3">Next: evaluate the redemption →</a></div>
+
+  <div class="step-wrap" id="step-3">
+    <div class="step">
+      <div class="step-num">3</div>
       <div>
-        <h2>Trip calculator</h2>
-        <div class="sub">Create a trip, then add each flight and hotel award price you find — one trip can hold as many legs as you need.</div>
+        <div class="step-kicker">Step 3</div>
+        <h2>Evaluate the redemption</h2>
+        <p>Compare points required, cash price, fees, and CPP to decide whether to transfer or pay cash.</p>
       </div>
     </div>
-    <div class="panel-body">
-      <div class="trip-form new-trip-form">
-        <div class="field">
-          <label>Trip name</label>
-          <input type="text" id="tripName" placeholder="e.g. Tokyo, spring 2027">
-        </div>
-        <button class="btn secondary" id="addTripBtn">Add trip</button>
-      </div>
-      <div id="tripList"></div>
-    </div>
-  </section>
+  </div>
+
+  <div class="eval-context" id="evalContext"></div>
 
   <!-- CENTS PER POINT CALCULATOR -->
   <section class="panel" id="section-cpp">
@@ -664,6 +776,26 @@
         <div class="cpp-legend-item good"><span class="cpp-swatch"></span>1.4–1.7 cpp — Good redemption</div>
         <div class="cpp-legend-item excellent"><span class="cpp-swatch"></span>1.8 cpp and up — Excellent redemption</div>
       </div>
+    </div>
+  </section>
+
+  <!-- TRIP PLANNER -->
+  <section class="panel" id="section-trips">
+    <div class="panel-head">
+      <div>
+        <h2>Trip calculator</h2>
+        <div class="sub">Create a trip, then add each flight and hotel award price you find — one trip can hold as many legs as you need.</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="trip-form new-trip-form">
+        <div class="field">
+          <label>Trip name</label>
+          <input type="text" id="tripName" placeholder="e.g. Tokyo, spring 2027">
+        </div>
+        <button class="btn secondary" id="addTripBtn">Add trip</button>
+      </div>
+      <div id="tripList"></div>
     </div>
   </section>
 
@@ -790,6 +922,19 @@ function getConcreteEdges(cur){
 /* ---------------------------------------------------------
    STATE + STORAGE
 --------------------------------------------------------- */
+// On GitHub Pages there is no artifact storage, so fall back to this browser's localStorage.
+if(!window.storage){
+  window.storage = {
+    async get(key){
+      try{ const v = localStorage.getItem(key); return v===null ? null : {key, value:v}; }
+      catch(e){ return null; }
+    },
+    async set(key, value){
+      try{ localStorage.setItem(key, value); }catch(e){}
+      return {key, value};
+    },
+  };
+}
 let cards = [];
 let trips = [];
 let loyaltyBalances = [];
@@ -920,6 +1065,7 @@ function renderCardList(){
       card.balance = Number(e.target.value)||0;
       saveCards();
       renderLedger();
+      renderPathways();
       renderStats();
       renderCompareChecks();
       renderMatrix();
@@ -1004,6 +1150,7 @@ function renderLoyaltyList(){
       entry.balance = Number(e.target.value)||0;
       saveLoyalty();
       renderLedger();
+      renderPathways();
       renderStats();
       renderCompareChecks();
       renderMatrix();
@@ -1929,6 +2076,129 @@ function renderAllianceResult(){
   el.innerHTML = headHtml + bodyHtml;
 }
 
+/* ---------------------------------------------------------
+   STEP 2: PATHWAY FINDER
+--------------------------------------------------------- */
+// Airlines outside the three alliances, with their own program name as used in TRANSFER_MAP.
+const NON_ALLIANCE_AIRLINES = {
+  'Southwest Airlines':'Southwest Rapid Rewards',
+  'JetBlue Airways':'JetBlue TrueBlue',
+  'Emirates':'Emirates Skywards',
+  'Etihad Airways':'Etihad Guest',
+};
+AIRLINE_LINKS['Emirates'] = AIRLINE_LINKS['Emirates'] || 'https://www.emirates.com/';
+AIRLINE_LINKS['Etihad Airways'] = AIRLINE_LINKS['Etihad Airways'] || 'https://www.etihad.com/';
+
+function allianceOf(airline){
+  return Object.keys(ALLIANCE_MEMBERS).find(a=>ALLIANCE_MEMBERS[a].includes(airline)) || null;
+}
+
+function renderPathwaySelect(){
+  const sel = document.getElementById('pathAirline');
+  const groups = Object.keys(ALLIANCE_MEMBERS).map(al=>{
+    const opts = ALLIANCE_MEMBERS[al].slice().sort().map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+    return `<optgroup label="${escapeHtml(al)}">${opts}</optgroup>`;
+  });
+  const other = Object.keys(NON_ALLIANCE_AIRLINES).sort().map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+  sel.innerHTML = `<option value="">Choose an airline…</option>` + groups.join('') + `<optgroup label="No global alliance">${other}</optgroup>`;
+  sel.addEventListener('change', renderPathways);
+  document.getElementById('pathScope').addEventListener('change', renderPathways);
+}
+
+// Every loyalty program that can book `airline`: its own program first, then alliance partners'.
+function bookingPrograms(airline){
+  const out = [];
+  const own = AIRLINE_TO_PROGRAM[airline] || NON_ALLIANCE_AIRLINES[airline];
+  if(own) out.push({program:own, kind:'own'});
+  const al = allianceOf(airline);
+  if(al){
+    ALLIANCE_MEMBERS[al].forEach(m=>{
+      const p = AIRLINE_TO_PROGRAM[m];
+      if(p && !out.some(o=>o.program===p)) out.push({program:p, kind:'alliance', via:m, alliance:al});
+    });
+  }
+  return out;
+}
+
+// Which card currencies transfer into `program`, and what that's worth given the user's balances.
+function routesInto(program, bal){
+  const routes = [];
+  Object.keys(TRANSFER_MAP).forEach(cur=>{
+    getConcreteEdges(cur).forEach(e=>{
+      if(e.to===program){
+        const held = bal[cur] || 0;
+        routes.push({cur, ratio:e.ratio, note:e.note, held, yields:Math.floor(held * e.ratio)});
+      }
+    });
+  });
+  return routes.sort((a,b)=> b.yields - a.yields || a.cur.localeCompare(b.cur));
+}
+
+function renderPathways(){
+  const airline = document.getElementById('pathAirline').value;
+  const scope = document.getElementById('pathScope').value;
+  const el = document.getElementById('pathResult');
+  if(!airline){
+    el.innerHTML = `<p class="empty-note">Choose an airline to see every program that can book it.</p>`;
+    return;
+  }
+  const bal = balancesByCurrency();
+  const al = allianceOf(airline);
+
+  let rows = bookingPrograms(airline).map(bp=>{
+    const routes = routesInto(bp.program, bal);
+    const direct = bal[bp.program] || 0;
+    const total = direct + routes.reduce((sum,r)=>sum+r.yields,0);
+    return {...bp, routes, direct, total};
+  });
+  const totalPrograms = rows.length;
+  if(scope==='mine') rows = rows.filter(r=>r.total>0);
+  rows.sort((a,b)=> (b.total>0)-(a.total>0) || (a.kind==='own'?-1:0)-(b.kind==='own'?-1:0) || b.total-a.total || a.program.localeCompare(b.program));
+
+  const head = `<div class="pathway-head">${linkedAirline(airline)}
+    ${al ? `<a class="prog-link" href="${ALLIANCE_LINKS[al]}" target="_blank" rel="noopener noreferrer"><span class="abadge">${escapeHtml(al)}</span></a>` : `<span class="abadge none">NO GLOBAL ALLIANCE</span>`}</div>`;
+
+  if(rows.length===0){
+    el.innerHTML = head + `<p class="leg-hint">None of your current points reach a program that books ${escapeHtml(airline)}. ${totalPrograms} program${totalPrograms===1?'':'s'} can book it; switch "Show" to every program to see them, or add balances in Step 1.</p>`;
+    return;
+  }
+
+  const cards = rows.map(r=>{
+    const tag = r.kind==='own' ? `${escapeHtml(airline)}${/s$/.test(airline)?"'":"'s"} own program` : `${escapeHtml(r.alliance)} partner · ${escapeHtml(r.via)}`;
+    const routeItems = r.routes.map(rt=>{
+      const ratio = rt.ratio===1 ? '1:1' : (rt.note || `${rt.ratio}:1`);
+      const have = rt.held>0 ? ` · you have ${fmt(rt.held)} → ${fmt(rt.yields)}` : '';
+      return `<li class="${rt.held>0?'held':''}"><span>${linkedName(rt.cur)}${have}</span><span class="ratio">${ratio}</span></li>`;
+    });
+    if(r.direct>0) routeItems.unshift(`<li class="held"><span>Points already in ${escapeHtml(r.program)}</span><span class="ratio">${fmt(r.direct)}</span></li>`);
+    const routesHtml = routeItems.length
+      ? `<ul class="pathway-routes">${routeItems.join('')}</ul>`
+      : `<p class="leg-hint" style="margin-top:8px;">No card currency transfers here. You'd need to earn these miles directly.</p>`;
+    return `<div class="pathway${r.total>0?' reachable':''}">
+      <div class="pathway-top">
+        <div><div class="pathway-tag">${tag}</div><div class="pathway-name">${linkedName(r.program)}</div></div>
+        <div class="pathway-total${r.total>0?'':' none'}">${r.total>0 ? `up to ${fmt(r.total)} pts` : 'none of your points'}</div>
+      </div>
+      ${routesHtml}
+      <div class="pathway-actions"><button type="button" class="btn ghost eval-btn" data-program="${escapeHtml(r.program)}" data-airline="${escapeHtml(airline)}" data-total="${r.total}">Evaluate this pathway →</button></div>
+    </div>`;
+  }).join('');
+
+  const hidden = totalPrograms - rows.length;
+  const note = scope==='mine' && hidden>0 ? `<p class="leg-hint">${hidden} more program${hidden===1?'':'s'} can book ${escapeHtml(airline)} but none of your current points reach ${hidden===1?'it':'them'}.</p>` : '';
+  el.innerHTML = head + note + `<div class="pathway-list">${cards}</div>`;
+
+  el.querySelectorAll('.eval-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const {program, airline:air, total} = btn.dataset;
+      document.getElementById('evalContext').innerHTML =
+        `<strong>Evaluating:</strong> ${escapeHtml(air)} booked through ${linkedName(program)}${Number(total)>0 ? ` · you can reach up to ${fmt(Number(total))} points there` : ''}. Look up the award price on ${escapeHtml(program)}'s site and the cash fare, then enter them below.`;
+      document.getElementById('step-3').scrollIntoView({behavior:'smooth'});
+      setTimeout(()=>document.getElementById('cppPoints').focus({preventScroll:true}), 400);
+    });
+  });
+}
+
 function renderAll(){
   renderStats();
   renderCardList();
@@ -1938,6 +2208,7 @@ function renderAll(){
   renderCompareChecks();
   renderMatrix();
   renderTrips();
+  renderPathways();
 }
 
 /* ---------------------------------------------------------
@@ -2000,6 +2271,8 @@ renderLoyaltyPresetSelect();
 renderExplorerSelect();
 renderAllianceSelect();
 renderAllianceResult();
+renderPathwaySelect();
+renderPathways();
 loadState();
 </script>
 </body>
