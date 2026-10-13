@@ -316,6 +316,13 @@
   .cpp-figure.excellent{background:#dcece0; color:#1f6b3f; border:2px solid #2f8f52;}
   .cpp-detail{font-size:13px; color:var(--text-dim); margin:0 0 6px;}
   .cpp-verdict{font-size:13.5px; font-weight:600; margin:0;}
+  .cpp-savings{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0;}
+  .cpp-save-tile{background:#fffaf0; border:1px solid var(--line); border-radius:8px; padding:12px 14px;}
+  .cpp-save-tile .amt{font-size:22px; font-weight:800; line-height:1.2;}
+  .cpp-save-tile .amt.pos{color:#1f6b3f;}
+  .cpp-save-tile .amt.neg{color:#8f4324;}
+  .cpp-save-tile .lbl{font-size:12.5px; color:var(--text-dim); margin-top:3px;}
+  @media (max-width:640px){ .cpp-savings{grid-template-columns:1fr;} }
   .cpp-legend{
     display:flex; flex-wrap:wrap; gap:10px 18px; margin-top:16px;
     padding-top:12px; border-top:1px dashed var(--line);
@@ -1950,6 +1957,9 @@ function computeCpp(){
 
   const netCost = Math.max(cash - taxes, 0);
   const cpp = (netCost / points) * 100;
+  // Dollar savings: cash you avoid paying, and how that compares to cashing the points out at ~1¢ each.
+  const cashBackValue = points * 0.01;
+  const extraValue = netCost - cashBackValue;
 
   let tier, tierClass, verdict;
   if(cpp < 1.0){
@@ -1970,6 +1980,16 @@ function computeCpp(){
     <div class="cpp-figure ${tierClass}">
       <div class="cpp-value">${cpp.toFixed(2)}¢</div>
       <div class="cpp-tier">${tier}</div>
+    </div>
+    <div class="cpp-savings">
+      <div class="cpp-save-tile">
+        <div class="amt pos">${fmtCash(netCost)}</div>
+        <div class="lbl">Cash you save by booking with points${taxes>0 ? ` (${fmtCash(cash)} cash price minus ${fmtCash(taxes)} taxes/fees)` : ''}</div>
+      </div>
+      <div class="cpp-save-tile">
+        <div class="amt ${extraValue>=0?'pos':'neg'}">${extraValue>=0?'+':'−'}${fmtCash(Math.abs(extraValue))}</div>
+        <div class="lbl">${extraValue>=0?'Extra value':'Value lost'} vs. cashing out your ${fmt(points)} points at 1¢ each (${fmtCash(cashBackValue)})</div>
+      </div>
     </div>
     <p class="cpp-detail">${fmtCash(netCost)} in value covered by ${fmt(points)} points${taxes>0 ? ` (after the ${fmtCash(taxes)} in taxes/fees you'd still pay when booking with points)` : ''} — that works out to ${cpp.toFixed(2)}¢ per point.</p>
     <p class="cpp-verdict">${verdict}</p>
