@@ -111,6 +111,18 @@
   .btn.disabled { background: #d8d0c4; pointer-events: none; }
   .btn.ghost { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
 
+  /* Tools: two columns, full optimizer spans both */
+  .tools-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tools-grid .item { display: flex; flex-direction: column; padding: 16px; }
+  .tools-grid .item p { flex: 1; }
+  .tools-grid .item.wide { grid-column: 1 / -1; }
+  @media (max-width: 480px) {
+    .tools-grid .item:not(.wide) { padding: 14px 12px; }
+    .tools-grid .item:not(.wide) h3 { font-size: 17px; }
+    .tools-grid .item:not(.wide) p { font-size: 14px; }
+    .tools-grid .item:not(.wide) .btn { font-size: 15px; padding: 12px 8px; }
+  }
+
   /* Trip */
   .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 14px; }
   .stat { background: var(--sand); border-radius: 10px; padding: 10px 12px; }
@@ -223,8 +235,8 @@
   <section id="tools">
     <h2>Free tools</h2>
     <p class="sub">Calculators I built to plan our trips.</p>
-    <div class="grid">
-      <div class="item">
+    <div class="grid tools-grid">
+      <div class="item wide">
         <span class="tag">Calculator</span>
         <h3>Points optimizer</h3>
         <p>See which points to use for a trip and how much each point is worth.</p>
@@ -235,28 +247,28 @@
         <span class="tag">Calculator</span>
         <h3>Transfer partners</h3>
         <p>See every airline and hotel partner a points currency transfers to, and at what ratio.</p>
-        <a class="btn" href="transfer-partners.html">Open transfer partners</a>
+        <a class="btn" href="transfer-partners.html">Open</a>
       </div>
 
       <div class="item">
         <span class="tag">Calculator</span>
         <h3>Compare overlap</h3>
         <p>Find the programs more than one of your cards can reach, so you know where you can pool points.</p>
-        <a class="btn" href="compare-overlap.html">Open compare overlap</a>
+        <a class="btn" href="compare-overlap.html">Open</a>
       </div>
 
       <div class="item">
         <span class="tag">Calculator</span>
         <h3>Airline alliances</h3>
         <p>Pick a US airline and a points currency to see which partner airlines you can actually book.</p>
-        <a class="btn" href="airline-alliances.html">Open airline alliances</a>
+        <a class="btn" href="airline-alliances.html">Open</a>
       </div>
 
       <div class="item">
         <span class="tag">Calculator</span>
         <h3>Points or cash?</h3>
         <p>Work out your cents-per-point value to see if a redemption beats just paying cash.</p>
-        <a class="btn" href="points-or-cash.html">Open points or cash</a>
+        <a class="btn" href="points-or-cash.html">Open</a>
       </div>
     </div>
   </section>
