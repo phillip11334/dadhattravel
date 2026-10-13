@@ -587,6 +587,7 @@ const PROGRAM_LINKS = {
   'Citi ThankYou Points':'https://www.thankyou.com/',
   'Capital One Miles':'https://www.capitalone.com/rewards/',
   'Bilt Rewards':'https://www.biltrewards.com/',
+  'Hilton Honors':'https://www.hilton.com/en/hilton-honors/',
   'Marriott Bonvoy':'https://www.marriott.com/loyalty.mi',
   'World of Hyatt':'https://world.hyatt.com/',
   'Atmos Rewards':'https://www.alaskaair.com/atmosrewards',
@@ -659,6 +660,7 @@ const TRANSFER_MAP = {
     {to:'Iberia Avios', ratio:1},
     {to:'JetBlue TrueBlue', ratio:0.8, note:'5:4'},
     {to:'Marriott Bonvoy', ratio:1},
+    {to:'Hilton Honors', ratio:2, note:'1:2'},
     {to:'Choice Privileges', ratio:1},
   ],
   'Chase Ultimate Rewards': [
@@ -728,6 +730,7 @@ const TRANSFER_MAP = {
     {to:'TAP Miles&Go', ratio:1},
     {to:'Southwest Rapid Rewards', ratio:1},
     {to:'Marriott Bonvoy', ratio:1},
+    {to:'Hilton Honors', ratio:1},
     {to:'World of Hyatt', ratio:1},
     {to:'IHG One Rewards', ratio:1},
     {to:'Wyndham Rewards', ratio:1},
@@ -735,7 +738,7 @@ const TRANSFER_MAP = {
 };
 
 // Concrete program -> category, used to filter the trip calculator and the overlap matrix.
-const HOTEL_PROGRAMS = new Set(['Marriott Bonvoy','Choice Privileges','IHG One Rewards','World of Hyatt','Wyndham Rewards']);
+const HOTEL_PROGRAMS = new Set(['Hilton Honors','Marriott Bonvoy','Choice Privileges','IHG One Rewards','World of Hyatt','Wyndham Rewards']);
 function programType(name){
   return HOTEL_PROGRAMS.has(name) ? 'hotel' : 'flight';
 }
