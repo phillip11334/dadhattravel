@@ -1389,34 +1389,6 @@ function renderTrips(){
                 <option value="oneway">One-way</option>
               </select>
             </div>
-            <div class="field leg-oneway-date-field" data-trip-id="${trip.id}" style="display:none;">
-              <label>Date</label>
-              <input type="date" class="leg-date-input" data-trip-id="${trip.id}">
-            </div>
-            <div class="field leg-deptime1-field" data-trip-id="${trip.id}">
-              <label>Departure time</label>
-              <input type="time" class="leg-deptime1-input" data-trip-id="${trip.id}">
-            </div>
-            <div class="field leg-arrtime1-field" data-trip-id="${trip.id}">
-              <label>Arrival time</label>
-              <input type="time" class="leg-arrtime1-input" data-trip-id="${trip.id}">
-            </div>
-            <div class="field leg-depart-field" data-trip-id="${trip.id}">
-              <label>Departure date</label>
-              <input type="date" class="leg-depart-input" data-trip-id="${trip.id}">
-            </div>
-            <div class="field leg-return-field" data-trip-id="${trip.id}">
-              <label>Return date</label>
-              <input type="date" class="leg-return-input" data-trip-id="${trip.id}">
-            </div>
-            <div class="field leg-deptime2-field" data-trip-id="${trip.id}">
-              <label>Return departure time</label>
-              <input type="time" class="leg-deptime2-input" data-trip-id="${trip.id}">
-            </div>
-            <div class="field leg-arrtime2-field" data-trip-id="${trip.id}">
-              <label>Return arrival time</label>
-              <input type="time" class="leg-arrtime2-input" data-trip-id="${trip.id}">
-            </div>
             <div class="field leg-railroute-field" data-trip-id="${trip.id}" style="display:none;">
               <label>Route</label>
               <input type="text" class="leg-railroute-input" data-trip-id="${trip.id}" placeholder="e.g. Paris → London">
@@ -1512,13 +1484,6 @@ function updateLegFormVisibility(tripId){
   };
   set('leg-route-field', isFlight);
   set('leg-triptype-field', isFlight);
-  set('leg-oneway-date-field', isFlight && isOneway);
-  set('leg-deptime1-field', isFlight);
-  set('leg-arrtime1-field', isFlight);
-  set('leg-depart-field', isFlight && !isOneway);
-  set('leg-return-field', isFlight && !isOneway);
-  set('leg-deptime2-field', isFlight && !isOneway);
-  set('leg-arrtime2-field', isFlight && !isOneway);
   set('leg-railroute-field', isRail);
   set('leg-raildate-field', isRail);
   set('leg-raildeptime-field', isRail);
@@ -1578,13 +1543,6 @@ document.getElementById('tripList').addEventListener('click', (e)=>{
     const pointsInp = document.querySelector(`.leg-points-input[data-trip-id="${tripId}"]`);
     const routeInp = document.querySelector(`.leg-route-input[data-trip-id="${tripId}"]`);
     const triptypeSel = document.querySelector(`.leg-triptype-select[data-trip-id="${tripId}"]`);
-    const dateInp = document.querySelector(`.leg-date-input[data-trip-id="${tripId}"]`);
-    const deptime1Inp = document.querySelector(`.leg-deptime1-input[data-trip-id="${tripId}"]`);
-    const arrtime1Inp = document.querySelector(`.leg-arrtime1-input[data-trip-id="${tripId}"]`);
-    const departInp = document.querySelector(`.leg-depart-input[data-trip-id="${tripId}"]`);
-    const returnInp = document.querySelector(`.leg-return-input[data-trip-id="${tripId}"]`);
-    const deptime2Inp = document.querySelector(`.leg-deptime2-input[data-trip-id="${tripId}"]`);
-    const arrtime2Inp = document.querySelector(`.leg-arrtime2-input[data-trip-id="${tripId}"]`);
     const railRouteInp = document.querySelector(`.leg-railroute-input[data-trip-id="${tripId}"]`);
     const railDateInp = document.querySelector(`.leg-raildate-input[data-trip-id="${tripId}"]`);
     const railDeptimeInp = document.querySelector(`.leg-raildeptime-input[data-trip-id="${tripId}"]`);
@@ -1671,16 +1629,6 @@ document.getElementById('tripList').addEventListener('click', (e)=>{
       const route = routeInp.value.trim();
       if(route) leg.route = route;
       leg.tripType = triptypeSel.value;
-      if(deptime1Inp.value) leg.depTime = deptime1Inp.value;
-      if(arrtime1Inp.value) leg.arrTime = arrtime1Inp.value;
-      if(leg.tripType==='oneway'){
-        if(dateInp.value) leg.date = dateInp.value;
-      }else{
-        if(departInp.value) leg.departDate = departInp.value;
-        if(returnInp.value) leg.returnDate = returnInp.value;
-        if(deptime2Inp.value) leg.returnDepTime = deptime2Inp.value;
-        if(arrtime2Inp.value) leg.returnArrTime = arrtime2Inp.value;
-      }
     }
     trip.legs.push(leg);
     saveTrips();
