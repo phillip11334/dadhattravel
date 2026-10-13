@@ -503,10 +503,10 @@
       </div>
       <div id="cppResult"></div>
       <div class="cpp-legend">
-        <div class="cpp-legend-item bad"><span class="cpp-swatch"></span>Under 1.0¢ — Bad redemption, cash wins</div>
-        <div class="cpp-legend-item ok"><span class="cpp-swatch"></span>1.0¢–1.3¢ — OK redemption</div>
-        <div class="cpp-legend-item good"><span class="cpp-swatch"></span>1.4¢–1.7¢ — Good redemption</div>
-        <div class="cpp-legend-item excellent"><span class="cpp-swatch"></span>1.8¢ and up — Excellent redemption</div>
+        <div class="cpp-legend-item bad"><span class="cpp-swatch"></span>Under 1.0 cpp — Bad redemption, cash wins</div>
+        <div class="cpp-legend-item ok"><span class="cpp-swatch"></span>1.0–1.3 cpp — OK redemption</div>
+        <div class="cpp-legend-item good"><span class="cpp-swatch"></span>1.4–1.7 cpp — Good redemption</div>
+        <div class="cpp-legend-item excellent"><span class="cpp-swatch"></span>1.8 cpp and up — Excellent redemption</div>
       </div>
     </div>
   </section>
@@ -724,7 +724,7 @@ function computeCpp(){
 
   el.innerHTML = `
     <div class="cpp-figure ${tierClass}">
-      <div class="cpp-value">${cpp.toFixed(2)}¢</div>
+      <div class="cpp-value">${cpp.toFixed(2)} cpp</div>
       <div class="cpp-tier">${tier}</div>
     </div>
     <div class="cpp-savings">
