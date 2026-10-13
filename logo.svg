@@ -1,0 +1,35 @@
+<svg viewBox="60 95 480 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="dadhattravel logo: a family of four in height order, dad in a backwards cap, with a plane and contrail">
+<line x1="80" y1="311" x2="160" y2="298" stroke="#5E7F94" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 9" opacity="0.7"/>
+<line x1="168" y1="297" x2="498" y2="244" stroke="#5E7F94" stroke-width="3" stroke-linecap="round"/>
+<g fill="#2E3436">
+<g transform="translate(0 20)">
+<circle cx="200" cy="205" r="13"/>
+<rect x="187" y="223" width="26" height="45" rx="13"/>
+</g>
+<g transform="translate(0 11)">
+<circle cx="252" cy="188" r="14"/>
+<circle cx="265" cy="181" r="6"/>
+<path d="M241 207 H263 L270 268 H234 Z"/>
+</g>
+<g transform="translate(0 1)">
+<circle cx="314" cy="154" r="16"/>
+<rect x="297" y="175" width="34" height="93" rx="17"/>
+</g>
+<g transform="translate(0 -10)">
+<circle cx="384" cy="130" r="17"/>
+<rect x="365" y="152" width="38" height="116" rx="19"/>
+</g>
+</g>
+<g transform="translate(0 -10)" fill="#5E7F94">
+<path d="M365 127 A19 19 0 0 1 403 127 Z"/>
+<rect x="351" y="122" width="20" height="6" rx="3"/>
+</g>
+<g transform="translate(500 243.5) rotate(-9) scale(1.35)" fill="#2E3436">
+<rect x="-20" y="-3.5" width="40" height="7" rx="3.5"/>
+<path d="M3 -3 L-5 -20 L0 -20 L11 -3 Z"/>
+<path d="M3 3 L-5 20 L0 20 L11 3 Z"/>
+<path d="M-14 -3 L-20 -10 L-16 -10 L-9 -3 Z"/>
+<path d="M-14 3 L-20 10 L-16 10 L-9 3 Z"/>
+</g>
+<text x="300" y="350" text-anchor="middle" font-family="Manrope, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="40" letter-spacing="3" fill="#2E3436">dadhat<tspan font-weight="400" fill="#5E7F94">travel</tspan></text>
+</svg>

@@ -38,12 +38,13 @@
     padding: 48px 0 40px;
     text-align: center;
   }
-  .badge {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: var(--sunset);
-    display: grid; place-items: center;
-    margin: 0 auto 16px;
-    font-size: 34px;
+  .logo {
+    display: block;
+    width: min(260px, 70vw); height: auto;
+    background: #F5F3EF;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin: 0 auto 20px;
   }
   h1 {
     font-family: "Fraunces", Georgia, serif;
@@ -135,7 +136,7 @@
 
 <header>
   <div class="wrap">
-    <div class="badge" aria-hidden="true">🧢</div>
+    <img class="logo" src="logo.svg" alt="dadhattravel logo" width="260" height="152">
     <h1>Dad Hat Travel and Points</h1>
     <p class="tagline">Family travel on points, from a dad of two.</p>
     <nav class="nav">
@@ -178,9 +179,9 @@
       </div>
 
       <div class="item">
-        <span class="tag">Points on rent</span>
+        <span class="tag">Points on mortgage or rent</span>
         <h3>Bilt Palladium</h3>
-        <p>Earn points on rent, plus transfer partners for flights and hotels.</p>
+        <p>Earn points on your mortgage or rent, plus transfer partners for flights and hotels.</p>
         <a class="btn" href="https://www.bilt.com/card?invite=ZFGVSXEW" target="_blank" rel="noopener sponsored">Apply with my referral</a>
       </div>
 
