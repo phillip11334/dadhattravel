@@ -2095,12 +2095,10 @@ function allianceOf(airline){
 
 function renderPathwaySelect(){
   const sel = document.getElementById('pathAirline');
-  const groups = Object.keys(ALLIANCE_MEMBERS).map(al=>{
-    const opts = ALLIANCE_MEMBERS[al].slice().sort().map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
-    return `<optgroup label="${escapeHtml(al)}">${opts}</optgroup>`;
-  });
-  const other = Object.keys(NON_ALLIANCE_AIRLINES).sort().map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
-  sel.innerHTML = `<option value="">Choose an airline…</option>` + groups.join('') + `<optgroup label="No global alliance">${other}</optgroup>`;
+  const airlines = [...new Set([...Object.values(ALLIANCE_MEMBERS).flat(), ...Object.keys(NON_ALLIANCE_AIRLINES)])]
+    .sort((x,y)=>x.localeCompare(y, 'en', {sensitivity:'base'}));
+  sel.innerHTML = `<option value="">Choose an airline…</option>` +
+    airlines.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
   sel.addEventListener('change', renderPathways);
   document.getElementById('pathScope').addEventListener('change', renderPathways);
 }
