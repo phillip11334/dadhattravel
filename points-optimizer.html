@@ -168,6 +168,10 @@
   .pathway-routes .ratio{font-family:var(--mono); color:var(--text-dim); font-size:12px; white-space:nowrap;}
   .pathway-actions{margin-top:10px;}
   .pathway-actions .btn{padding:7px 12px; font-size:12.5px;}
+  .finder{padding-top:4px;}
+  .finder + .finder{margin-top:22px; padding-top:20px; border-top:1px dashed var(--line);}
+  .finder h3{margin:0 0 2px; font-size:16px;}
+  .finder .finder-sub{font-size:12.5px; color:var(--text-dim); margin:0 0 12px;}
   .eval-context{
     background:#fff8ec; border:1px solid var(--brass); border-radius:9px;
     padding:10px 14px; margin:0 0 14px; font-size:13.5px;
@@ -645,10 +649,13 @@
     <div class="panel-head">
       <div>
         <h2>Pathway finder</h2>
-        <div class="sub">Pick the airline you want to fly. Partners in the same alliance can usually book its flights too, so you may have more ways in than you think.</div>
+        <div class="sub">Pick where you want to fly or stay, and see which programs can book it and which of your points can get there.</div>
       </div>
     </div>
     <div class="panel-body">
+      <div class="finder" id="airlineFinder">
+      <h3>✈️ Airline pathway finder</h3>
+      <p class="finder-sub">Partners in the same alliance can usually book each other's flights, so you may have more ways in than you think.</p>
       <div class="pathway-filters">
         <div class="field">
           <label for="pathAirline">Airline you want to fly</label>
@@ -664,6 +671,20 @@
       </div>
       <div id="pathResult"></div>
       <div class="disclaimer">Alliance partners can generally book each other's flights, but award space released to partners varies by route and date. Some airlines also have one-off partnerships outside their alliance that aren't listed here. Search the partner program's site for real availability before you transfer.</div>
+      </div>
+
+      <div class="finder" id="hotelFinder">
+      <h3>🏨 Hotel pathway finder</h3>
+      <p class="finder-sub">Hotel stays book through the chain's own program, so the question is which of your card points transfer there, and at what ratio.</p>
+      <div class="pathway-filters">
+        <div class="field">
+          <label for="hotelChain">Hotel chain you want to stay at</label>
+          <select id="hotelChain"></select>
+        </div>
+      </div>
+      <div id="hotelResult"></div>
+      <div class="disclaimer">Hotel transfer ratios vary a lot (some are 1:2 or 2:1), so compare the points you'd end up with, not just the ratio. Check award availability and the nightly points price on the hotel's site before you transfer.</div>
+      </div>
     </div>
   </section>
 
@@ -2099,8 +2120,8 @@ function renderPathwaySelect(){
     .sort((x,y)=>x.localeCompare(y, 'en', {sensitivity:'base'}));
   sel.innerHTML = `<option value="">Choose an airline…</option>` +
     airlines.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
-  sel.addEventListener('change', renderPathways);
-  document.getElementById('pathScope').addEventListener('change', renderPathways);
+  sel.addEventListener('change', renderAirlinePathways);
+  document.getElementById('pathScope').addEventListener('change', renderAirlinePathways);
 }
 
 // Every loyalty program that can book `airline`: its own program first, then alliance partners'.
@@ -2132,7 +2153,52 @@ function routesInto(program, bal){
   return routes.sort((a,b)=> b.yields - a.yields || a.cur.localeCompare(b.cur));
 }
 
+// One program card, shared by the airline and hotel finders.
+function pathwayCardHtml(r, tag, subject){
+  const routeItems = r.routes.map(rt=>{
+    const ratio = rt.ratio===1 ? '1:1' : (rt.note || `${rt.ratio}:1`);
+    const have = rt.held>0 ? ` · you have ${fmt(rt.held)} → ${fmt(rt.yields)}` : '';
+    return `<li class="${rt.held>0?'held':''}"><span>${linkedName(rt.cur)}${have}</span><span class="ratio">${ratio}</span></li>`;
+  });
+  if(r.direct>0) routeItems.unshift(`<li class="held"><span>Points already in ${escapeHtml(r.program)}</span><span class="ratio">${fmt(r.direct)}</span></li>`);
+  const routesHtml = routeItems.length
+    ? `<ul class="pathway-routes">${routeItems.join('')}</ul>`
+    : `<p class="leg-hint" style="margin-top:8px;">No card currency transfers here. You'd need to earn these points directly.</p>`;
+  return `<div class="pathway${r.total>0?' reachable':''}">
+    <div class="pathway-top">
+      <div><div class="pathway-tag">${tag}</div><div class="pathway-name">${linkedName(r.program)}</div></div>
+      <div class="pathway-total${r.total>0?'':' none'}">${r.total>0 ? `up to ${fmt(r.total)} pts` : 'none of your points'}</div>
+    </div>
+    ${routesHtml}
+    <div class="pathway-actions"><button type="button" class="btn ghost eval-btn" data-program="${escapeHtml(r.program)}" data-subject="${escapeHtml(subject)}" data-total="${r.total}">Evaluate this pathway →</button></div>
+  </div>`;
+}
+
+function programRow(program, bal, extra){
+  const routes = routesInto(program, bal);
+  const direct = bal[program] || 0;
+  const total = direct + routes.reduce((sum,r)=>sum+r.yields,0);
+  return {...(extra||{}), program, routes, direct, total};
+}
+
+function wireEvalButtons(el){
+  el.querySelectorAll('.eval-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const {program, subject, total} = btn.dataset;
+      document.getElementById('evalContext').innerHTML =
+        `<strong>Evaluating:</strong> ${escapeHtml(subject)} booked through ${linkedName(program)}${Number(total)>0 ? ` · you can reach up to ${fmt(Number(total))} points there` : ''}. Look up the award price on ${escapeHtml(program)}'s site and the cash price, then enter them below.`;
+      document.getElementById('step-3').scrollIntoView({behavior:'smooth'});
+      setTimeout(()=>document.getElementById('cppPoints').focus({preventScroll:true}), 400);
+    });
+  });
+}
+
 function renderPathways(){
+  renderAirlinePathways();
+  renderHotelPathways();
+}
+
+function renderAirlinePathways(){
   const airline = document.getElementById('pathAirline').value;
   const scope = document.getElementById('pathScope').value;
   const el = document.getElementById('pathResult');
@@ -2143,12 +2209,7 @@ function renderPathways(){
   const bal = balancesByCurrency();
   const al = allianceOf(airline);
 
-  let rows = bookingPrograms(airline).map(bp=>{
-    const routes = routesInto(bp.program, bal);
-    const direct = bal[bp.program] || 0;
-    const total = direct + routes.reduce((sum,r)=>sum+r.yields,0);
-    return {...bp, routes, direct, total};
-  });
+  let rows = bookingPrograms(airline).map(bp=>programRow(bp.program, bal, bp));
   const totalPrograms = rows.length;
   if(scope==='mine') rows = rows.filter(r=>r.total>0);
   rows.sort((a,b)=> (b.total>0)-(a.total>0) || (a.kind==='own'?-1:0)-(b.kind==='own'?-1:0) || b.total-a.total || a.program.localeCompare(b.program));
@@ -2163,38 +2224,52 @@ function renderPathways(){
 
   const cards = rows.map(r=>{
     const tag = r.kind==='own' ? `${escapeHtml(airline)}${/s$/.test(airline)?"'":"'s"} own program` : `${escapeHtml(r.alliance)} partner · ${escapeHtml(r.via)}`;
-    const routeItems = r.routes.map(rt=>{
-      const ratio = rt.ratio===1 ? '1:1' : (rt.note || `${rt.ratio}:1`);
-      const have = rt.held>0 ? ` · you have ${fmt(rt.held)} → ${fmt(rt.yields)}` : '';
-      return `<li class="${rt.held>0?'held':''}"><span>${linkedName(rt.cur)}${have}</span><span class="ratio">${ratio}</span></li>`;
-    });
-    if(r.direct>0) routeItems.unshift(`<li class="held"><span>Points already in ${escapeHtml(r.program)}</span><span class="ratio">${fmt(r.direct)}</span></li>`);
-    const routesHtml = routeItems.length
-      ? `<ul class="pathway-routes">${routeItems.join('')}</ul>`
-      : `<p class="leg-hint" style="margin-top:8px;">No card currency transfers here. You'd need to earn these miles directly.</p>`;
-    return `<div class="pathway${r.total>0?' reachable':''}">
-      <div class="pathway-top">
-        <div><div class="pathway-tag">${tag}</div><div class="pathway-name">${linkedName(r.program)}</div></div>
-        <div class="pathway-total${r.total>0?'':' none'}">${r.total>0 ? `up to ${fmt(r.total)} pts` : 'none of your points'}</div>
-      </div>
-      ${routesHtml}
-      <div class="pathway-actions"><button type="button" class="btn ghost eval-btn" data-program="${escapeHtml(r.program)}" data-airline="${escapeHtml(airline)}" data-total="${r.total}">Evaluate this pathway →</button></div>
-    </div>`;
+    return pathwayCardHtml(r, tag, airline);
   }).join('');
 
   const hidden = totalPrograms - rows.length;
   const note = scope==='mine' && hidden>0 ? `<p class="leg-hint">${hidden} more program${hidden===1?'':'s'} can book ${escapeHtml(airline)} but none of your current points reach ${hidden===1?'it':'them'}.</p>` : '';
   el.innerHTML = head + note + `<div class="pathway-list">${cards}</div>`;
+  wireEvalButtons(el);
+}
 
-  el.querySelectorAll('.eval-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const {program, airline:air, total} = btn.dataset;
-      document.getElementById('evalContext').innerHTML =
-        `<strong>Evaluating:</strong> ${escapeHtml(air)} booked through ${linkedName(program)}${Number(total)>0 ? ` · you can reach up to ${fmt(Number(total))} points there` : ''}. Look up the award price on ${escapeHtml(program)}'s site and the cash fare, then enter them below.`;
-      document.getElementById('step-3').scrollIntoView({behavior:'smooth'});
-      setTimeout(()=>document.getElementById('cppPoints').focus({preventScroll:true}), 400);
-    });
-  });
+/* ---------- Hotel pathway finder ---------- */
+// Hotel chain (as people search for it) -> loyalty program name used in TRANSFER_MAP.
+const HOTEL_CHAINS = [
+  {chain:'Choice Hotels', brands:'Comfort, Quality, Cambria, Radisson (US)', program:'Choice Privileges'},
+  {chain:'Hyatt', brands:'Park Hyatt, Andaz, Hyatt Regency, Hyatt Place', program:'World of Hyatt'},
+  {chain:'IHG', brands:'InterContinental, Kimpton, Holiday Inn, Crowne Plaza', program:'IHG One Rewards'},
+  {chain:'Marriott', brands:'Ritz-Carlton, St. Regis, Westin, Sheraton, Courtyard', program:'Marriott Bonvoy'},
+  {chain:'Wyndham', brands:'Wyndham, La Quinta, Ramada, Days Inn', program:'Wyndham Rewards'},
+];
+
+function renderHotelSelect(){
+  const sel = document.getElementById('hotelChain');
+  sel.innerHTML = `<option value="">Choose a hotel chain…</option>` +
+    `<option value="__all__">Compare all hotel programs</option>` +
+    HOTEL_CHAINS.map(h=>`<option value="${escapeHtml(h.chain)}">${escapeHtml(h.chain)} (${escapeHtml(h.brands)})</option>`).join('');
+  sel.addEventListener('change', renderHotelPathways);
+}
+
+function renderHotelPathways(){
+  const choice = document.getElementById('hotelChain').value;
+  const el = document.getElementById('hotelResult');
+  if(!choice){
+    el.innerHTML = `<p class="empty-note">Choose a hotel chain, or compare all hotel programs at once.</p>`;
+    return;
+  }
+  const bal = balancesByCurrency();
+  const chains = choice==='__all__' ? HOTEL_CHAINS : HOTEL_CHAINS.filter(h=>h.chain===choice);
+  const rows = chains.map(h=>programRow(h.program, bal, h))
+    .sort((a,b)=> b.total-a.total || a.chain.localeCompare(b.chain));
+
+  const reachable = rows.filter(r=>r.total>0).length;
+  const lead = choice==='__all__'
+    ? `<p class="leg-hint">${reachable ? `Your points reach ${reachable} of ${rows.length} hotel programs, most points first.` : `None of your current points reach a hotel program yet. Add balances in Step 1.`}</p>`
+    : '';
+  const cards = rows.map(r=>pathwayCardHtml(r, `${escapeHtml(r.chain)} · ${escapeHtml(r.brands)}`, `A ${r.chain} stay`)).join('');
+  el.innerHTML = lead + `<div class="pathway-list">${cards}</div>`;
+  wireEvalButtons(el);
 }
 
 function renderAll(){
@@ -2270,6 +2345,7 @@ renderExplorerSelect();
 renderAllianceSelect();
 renderAllianceResult();
 renderPathwaySelect();
+renderHotelSelect();
 renderPathways();
 loadState();
 </script>
