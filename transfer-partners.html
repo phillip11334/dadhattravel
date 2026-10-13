@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Partners | Dad Hat Travel and Points</title>
+<meta name="description" content="Pick a credit card points currency to see every airline and hotel partner it transfers to, and at what ratio.">
+<style>
+  :root{
+    --ink:#132235;
+    --ink-2:#1c3752;
+    --paper:#efeade;
+    --paper-2:#e4dcc9;
+    --brass:#b8863b;
+    --brass-dark:#8f6526;
+    --teal:#1f4b46;
+    --stamp:#a4372f;
+    --line:#c9bfa4;
+    --text:#1b2432;
+    --text-dim:#5a6270;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background: var(--paper);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.45;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* ---------- TOP NAV ---------- */
+  .topnav{
+    position:sticky; top:0; z-index:20;
+    display:flex; flex-wrap:wrap; gap:8px;
+    background:var(--paper);
+    padding:10px 0;
+    margin:0 0 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .topnav a{
+    flex:0 0 auto;
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:#fff8ec;
+    background:linear-gradient(135deg, var(--teal), var(--ink-2));
+    border:1px solid var(--brass);
+    border-radius:20px;
+    padding:7px 14px;
+    text-decoration:none;
+    white-space:nowrap;
+    box-shadow:0 2px 0 rgba(0,0,0,0.15);
+  }
+  .topnav a:hover, .topnav a:active{
+    background:linear-gradient(135deg, var(--brass), var(--brass-dark)); color:#fff; border-color:var(--brass-dark);
+  }
+  section.panel{scroll-margin-top:64px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:10px;
+    padding:28px 26px;
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; right:-40px; top:-40px;
+    width:180px;height:180px;border-radius:50%;
+    background:radial-gradient(circle, rgba(184,134,59,0.25), transparent 70%);
+  }
+  .hero-eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--brass);
+    letter-spacing:0.02em;
+    margin:0 0 6px;
+  }
+  .hero h1{
+    font-family:var(--mono);
+    font-size:clamp(28px,5vw,40px);
+    font-weight:700;
+    letter-spacing:0.01em;
+    margin:0 0 8px;
+  }
+  .hero p{
+    margin:0;
+    max-width:56ch;
+    color:#c9d3d9;
+    font-size:14.5px;
+  }
+  .hero-stats{
+    display:flex; gap:22px; margin-top:20px; flex-wrap:wrap;
+  }
+  .hero-stat .n{font-family:var(--mono); font-size:22px; color:var(--paper); font-weight:700;}
+  .hero-stat .l{font-size:11.5px; color:#93a0a8;}
+  .hero-warning{
+    margin-top:18px;
+    padding:11px 14px;
+    background:rgba(184,134,59,0.14);
+    border:1px solid rgba(184,134,59,0.4);
+    border-radius:8px;
+    font-size:12.5px;
+    line-height:1.5;
+    color:#e9dfc9;
+  }
+  .hero-warning strong{color:var(--brass); font-weight:700;}
+
+  /* ---------- SECTION SHELL ---------- */
+  section.panel{
+    background:#fff8ec;
+    border:1px solid var(--line);
+    border-radius:10px;
+    margin-bottom:20px;
+    overflow:hidden;
+  }
+  .panel-head{
+    padding:16px 20px 12px;
+    border-bottom:1px dashed var(--line);
+    display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;
+  }
+  .panel-head h2{margin:0; font-size:17px; font-weight:700;}
+  .panel-head .sub{font-size:12.5px; color:var(--text-dim); margin-top:2px;}
+  .panel-body{padding:18px 20px 20px;}
+
+  /* ---------- CARD PORTFOLIO ---------- */
+  .card-row{
+    display:grid;
+    grid-template-columns:1fr 1fr auto auto;
+    gap:10px;
+    align-items:center;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fffefb;
+    margin-bottom:8px;
+  }
+  .card-row .cname{font-weight:600; font-size:14px;}
+  .card-row .ccur{font-size:12px; color:var(--teal); font-weight:600;}
+  .card-row input.bal{
+    width:120px; font-family:var(--mono); font-size:14px; text-align:right;
+    padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:#fff;
+  }
+  .del-btn{
+    background:none; border:none; color:var(--stamp); cursor:pointer; font-size:13px; padding:6px;
+  }
+  .del-btn:hover{text-decoration:underline;}
+
+  .add-card-form{
+    display:grid;
+    grid-template-columns:1fr 1fr 120px auto;
+    gap:10px;
+    margin-top:14px;
+    align-items:end;
+  }
+  .field label{display:block; font-size:11px; color:var(--text-dim); margin-bottom:4px; font-weight:600;}
+  select, input[type=text], input[type=number]{
+    width:100%;
+    font-family:var(--sans);
+    font-size:13.5px;
+    padding:8px 9px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:#fff;
+    color:var(--text);
+  }
+  .btn{
+    background:var(--brass); color:#fff; border:none; border-radius:6px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; cursor:pointer;
+    font-family:var(--sans);
+  }
+  .btn:hover{background:var(--brass-dark);}
+  .btn.secondary{background:var(--teal);}
+  .btn.secondary:hover{background:#153733;}
+  .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line);}
+  .btn.ghost:hover{background:var(--paper-2);}
+
+  /* ---------- LEDGER TOTALS ---------- */
+  .ledger-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
+    gap:10px;
+  }
+  .ledger-tile{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    background:#fffefb;
+  }
+  .ledger-tile .cur{font-size:12px; font-weight:700; color:var(--ink-2);}
+  .ledger-tile .pts{font-family:var(--mono); font-size:21px; font-weight:700; margin-top:4px;}
+  .empty-note{color:var(--text-dim); font-size:13.5px; font-style:italic;}
+
+  /* ---------- TRANSFER EXPLORER ---------- */
+  .partner-list{list-style:none; margin:10px 0 0; padding:0;}
+  .partner-list li{
+    display:flex; justify-content:space-between; gap:10px;
+    padding:8px 4px;
+    border-bottom:1px solid var(--paper-2);
+    font-size:13.5px;
+  }
+  .partner-list li:last-child{border-bottom:none;}
+  .partner-list .ratio{font-family:var(--mono); color:var(--text-dim); font-size:12.5px; white-space:nowrap;}
+
+  /* ---------- TRIP PLANNER ---------- */
+  .trip-form{
+    display:grid;
+    grid-template-columns:1.3fr 0.8fr 1.1fr 0.9fr auto;
+    gap:10px;
+    align-items:end;
+  }
+  .trip-form.new-trip-form{
+    grid-template-columns:1fr auto;
+    max-width:520px;
+  }
+  .leg-form{
+    display:grid;
+    grid-template-columns:0.8fr 1.3fr 0.9fr auto;
+    gap:8px;
+    align-items:end;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+  .leg-detail-row{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;
+  }
+  .leg-detail-row .field{flex:1; min-width:160px;}
+  .leg-row{
+    border:1px solid var(--paper-2);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:10px;
+    background:#fffefb;
+  }
+  .leg-row-head{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;
+  }
+  .leg-tag{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:0.03em;
+    padding:2px 7px; border-radius:4px; background:var(--paper-2); color:var(--ink-2); margin-right:8px;
+  }
+  .leg-title{font-size:13.5px; font-weight:600;}
+  .leg-remove{background:none;border:none;color:var(--stamp);cursor:pointer;font-size:12px;}
+  .leg-remove:hover{text-decoration:underline;}
+  .trip-empty-legs{font-size:13px; color:var(--text-dim); font-style:italic; margin:4px 0 0;}
+
+  /* ---------- TRIP TIMELINE ---------- */
+  .trip-timeline{margin:2px 0 16px;}
+  .timeline-heading{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.04em;
+    color:var(--text-dim); margin-bottom:8px;
+  }
+  .timeline-list{position:relative; padding-left:28px;}
+  .timeline-list::before{
+    content:''; position:absolute; left:10px; top:4px; bottom:4px; width:2px; background:var(--line);
+  }
+  .timeline-item{position:relative; padding-bottom:14px;}
+  .timeline-item:last-child{padding-bottom:0;}
+  .timeline-dot{
+    position:absolute; left:-28px; top:0; width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:11px;
+    background:var(--brass); color:#fff; box-shadow:0 0 0 3px #fffefb;
+  }
+  .timeline-dot.hotel{background:var(--teal);}
+  .timeline-dot.activity{background:var(--stamp);}
+  .timeline-dot.rail{background:var(--brass-dark);}
+  .timeline-content{padding-top:1px;}
+  .timeline-label{font-size:13.5px; font-weight:600;}
+  .timeline-date{font-family:var(--mono); font-size:11.5px; color:var(--text-dim); margin-top:1px;}
+
+  /* ---------- TRIP COST SUMMARY ---------- */
+  .trip-cost-summary{
+    margin-top:16px; padding:12px 14px;
+    background:var(--ink); color:var(--paper);
+    border-radius:8px;
+  }
+  .cost-heading{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.04em;
+    color:var(--brass); margin-bottom:6px;
+  }
+  .cost-row{
+    display:flex; justify-content:space-between; gap:10px;
+    font-size:13.5px; padding:3px 0;
+  }
+  .cost-amt{font-family:var(--mono); font-weight:700;}
+  .trip-summary{
+    font-size:12.5px; color:#c9d3d9; margin-top:2px;
+  }
+
+  /* ---------- CENTS PER POINT CALCULATOR ---------- */
+  .cpp-explainer{
+    font-size:13px; color:var(--text-dim); line-height:1.5;
+    margin:0 0 16px; max-width:70ch;
+  }
+  .cpp-explainer strong{color:var(--ink-2);}
+  .cpp-form{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px;
+  }
+  .cpp-figure{
+    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    padding:16px 18px; border-radius:10px; margin-bottom:12px;
+  }
+  .cpp-value{font-family:var(--mono); font-size:32px; font-weight:700;}
+  .cpp-tier{font-size:13.5px; font-weight:700; letter-spacing:0.01em;}
+  .cpp-figure.bad{background:#f4dfd3; color:#8f4324;}
+  .cpp-figure.ok{background:#f3ecd5; color:#7a5c1e;}
+  .cpp-figure.good{background:#dceaf7; color:#1f5b8f;}
+  .cpp-figure.excellent{background:#dcece0; color:#1f6b3f; border:2px solid #2f8f52;}
+  .cpp-detail{font-size:13px; color:var(--text-dim); margin:0 0 6px;}
+  .cpp-verdict{font-size:13.5px; font-weight:600; margin:0;}
+  .cpp-legend{
+    display:flex; flex-wrap:wrap; gap:10px 18px; margin-top:16px;
+    padding-top:12px; border-top:1px dashed var(--line);
+  }
+  .cpp-legend-item{
+    display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim);
+  }
+  .cpp-swatch{width:10px; height:10px; border-radius:3px; display:inline-block;}
+  .cpp-legend-item.bad .cpp-swatch{background:#c85a3d;}
+  .cpp-legend-item.ok .cpp-swatch{background:#b8863b;}
+  .cpp-legend-item.good .cpp-swatch{background:#3d7fb8;}
+  .cpp-legend-item.excellent .cpp-swatch{background:#2f8f52;}
+
+  /* ---------- COMPARE / OVERLAP ---------- */
+  .checkbox-row{
+    display:flex; flex-wrap:wrap; gap:8px 14px; margin-bottom:14px;
+  }
+  .chk-pill{
+    display:flex; align-items:center; gap:6px;
+    font-size:13px; padding:6px 11px;
+    border:1px solid var(--line); border-radius:20px;
+    background:#fffefb; cursor:pointer; user-select:none;
+  }
+  .chk-pill input{margin:0;}
+  .chk-pill.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .overlap-summary{
+    font-size:13.5px; margin-bottom:14px; padding:10px 12px;
+    background:var(--paper-2); border-radius:8px;
+  }
+  .overlap-summary b{color:var(--teal);}
+  .matrix-scroll{overflow-x:auto;}
+  table.matrix-table{
+    border-collapse:collapse; width:100%; font-size:12.5px; min-width:420px;
+  }
+  table.matrix-table th, table.matrix-table td{
+    padding:7px 10px; border-bottom:1px solid var(--paper-2); text-align:center; white-space:nowrap;
+  }
+  table.matrix-table th{
+    font-size:11px; text-transform:none; color:var(--text-dim); font-weight:700;
+  }
+  table.matrix-table td:first-child, table.matrix-table th:first-child{
+    text-align:left; font-weight:600; color:var(--text); white-space:normal;
+  }
+  table.matrix-table tr.overlap-row{background:#fbf1de;}
+  table.matrix-table tr.overlap-row td:first-child{color:var(--brass-dark); font-weight:700;}
+  .cell-yes{color:var(--teal); font-family:var(--mono); font-weight:700;}
+  .cell-no{color:var(--line);}
+  .prog-link{color:inherit; text-decoration:underline; text-decoration-color:var(--brass); text-underline-offset:2px;}
+  .prog-link:hover{color:var(--brass-dark);}
+  table.matrix-table th .prog-link, .trip-card-head .prog-link{text-decoration-color:rgba(184,134,59,0.6);}
+
+  /* ---------- ALLIANCE FINDER ---------- */
+  .alliance-filters{
+    display:flex; flex-wrap:wrap; gap:12px; margin-bottom:4px;
+  }
+  .alliance-filters .field{min-width:220px; max-width:340px; flex:1;}
+  .alliance-head{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin:14px 0 6px;
+    padding:12px 14px;
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:8px;
+  }
+  .alliance-head .aname{font-weight:700; font-size:15px;}
+  .alliance-head .abadge{
+    font-family:var(--mono); font-size:11px; font-weight:700;
+    padding:3px 9px; border-radius:20px; background:var(--brass); color:#fff;
+  }
+  .alliance-head .abadge.none{background:var(--paper-2); color:var(--text);}
+  .alliance-partners{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr));
+    gap:8px; margin-top:12px;
+  }
+  .alliance-partner{
+    border:1px solid var(--line); border-radius:7px; padding:8px 11px;
+    background:#fffefb; font-size:13px;
+  }
+  .trip-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fffefb;
+    margin-top:14px;
+    overflow:hidden;
+  }
+  .trip-card-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px 16px;
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .trip-card-head .tname{font-weight:700; font-size:15px;}
+  .trip-card-head .ttarget{font-family:var(--mono); font-size:12px; color:var(--brass);}
+  .trip-card-body{padding:14px 16px;}
+  .status-line{
+    display:flex; align-items:center; gap:10px; margin-bottom:10px;
+  }
+  .status-badge{
+    font-family:var(--mono); font-size:11.5px; font-weight:700;
+    padding:3px 9px; border-radius:20px;
+    background:var(--paper-2); color:var(--text);
+  }
+  .status-badge.ok{background:#dcece3; color:#1f5b3f;}
+  .status-badge.short{background:#f4dfd3; color:#8f4324;}
+  .status-badge.cash{background:#e2e8ea; color:#2c4a52;}
+  .route-option{
+    display:flex; justify-content:space-between; gap:10px;
+    font-size:13px; padding:6px 0; border-bottom:1px dotted var(--paper-2);
+  }
+  .route-option:last-child{border-bottom:none;}
+  .route-option .from{font-weight:600;}
+  .route-option .need{font-family:var(--mono); color:var(--teal); font-weight:700;}
+  .route-option .need.cant{color:var(--stamp);}
+  .or-divider{
+    text-align:center; font-size:10.5px; color:var(--text-dim);
+    text-transform:uppercase; letter-spacing:0.06em; margin:1px 0;
+  }
+  .leg-hint{font-size:12px; color:var(--text-dim); margin:2px 0 6px;}
+
+  .trip-remove{background:none;border:none;color:#c9d3d9;cursor:pointer;font-size:12px;}
+  .trip-remove:hover{color:#fff; text-decoration:underline;}
+
+  .disclaimer{
+    font-size:11.5px; color:var(--text-dim); margin-top:14px; padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+
+  @media (max-width:640px){
+    .card-row{grid-template-columns:1fr auto; row-gap:6px;}
+    .card-row .ccur{grid-column:1/2;}
+    .add-card-form{grid-template-columns:1fr;}
+    .trip-form{grid-template-columns:1fr;}
+    .cpp-form{grid-template-columns:1fr;}
+  }
+</style>
+<style>.topnav{position:static;}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topnav">
+    <a href="index.html">&larr; Dad Hat Travel</a>
+    <a href="points-optimizer.html">Full Optimizer</a>
+    <a href="compare-overlap.html">Compare Overlap</a>
+    <a href="airline-alliances.html">Airline Alliances</a>
+    <a href="points-or-cash.html">Points or Cash?</a>
+  </nav>
+
+  <div class="hero">
+    <p class="hero-eyebrow">DAD HAT TRAVEL &amp; POINTS TOOLS</p>
+    <h1>Where can my points transfer?</h1>
+    <p>Pick a credit card points currency to see every airline and hotel partner it transfers to, and at what ratio.</p>
+    <div class="hero-warning"><strong>This is a planning tool, not a booking guarantee.</strong> Confirm the current transfer rate and partner list on the issuer's and loyalty program's own site before you move any points. Both can change without notice, and most transfers are final.</div>
+  </div>
+
+  <section class="panel" id="section-transfer">
+    <div class="panel-head">
+      <div>
+        <h2>Transfer partners</h2>
+        <div class="sub">Pick a currency you hold to see where it can go, and at what ratio.</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="field" style="max-width:320px;">
+        <label>Currency</label>
+        <select id="explorerCurrency"></select>
+      </div>
+      <ul class="partner-list" id="partnerList"></ul>
+      <div class="disclaimer">Transfer ratios are the standard published rates and change with issuer promotions — confirm the live rate on the issuer's site before transferring, since bonuses (e.g. 30% Amex-to-partner promos) can shift the math in your favor.</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* Generated from points-optimizer.html by build_tools.py. Edit the optimizer, then regenerate. */
+function cid(){ return 'c_' + Math.random().toString(36).slice(2,10); }
+function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+function fmtCash(n){
+  const num = Number(n)||0;
+  return '$' + num.toLocaleString('en-US', {minimumFractionDigits: (num%1!==0?2:0), maximumFractionDigits:2});
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+// Official program / portal URLs, used to link partner and currency names wherever they're shown.
+const PROGRAM_LINKS = {
+  'Amex Membership Rewards':'https://www.americanexpress.com/en-us/rewards/membership-rewards/',
+  'Chase Ultimate Rewards':'https://www.chase.com/personal/credit-cards/rewards/ultimate-rewards',
+  'Citi ThankYou Points':'https://www.thankyou.com/',
+  'Capital One Miles':'https://www.capitalone.com/rewards/',
+  'Bilt Rewards':'https://www.biltrewards.com/',
+  'Marriott Bonvoy':'https://www.marriott.com/loyalty.mi',
+  'World of Hyatt':'https://world.hyatt.com/',
+  'Atmos Rewards':'https://www.alaskaair.com/atmosrewards',
+  'Delta SkyMiles':'https://www.delta.com/skymiles',
+  'Air France-KLM Flying Blue':'https://www.flyingblue.com/',
+  'ANA Mileage Club':'https://www.ana.co.jp/en/us/amc/',
+  'British Airways Avios':'https://www.britishairways.com/en-us/executive-club',
+  'Cathay Pacific Asia Miles':'https://www.asiamiles.com/',
+  'Virgin Atlantic Flying Club':'https://www.virginatlantic.com/flying-club',
+  'Air Canada Aeroplan':'https://www.aeroplan.com/',
+  'Emirates Skywards':'https://www.emirates.com/skywards/',
+  'Etihad Guest':'https://www.etihad.com/en/etihad-guest',
+  'Iberia Avios':'https://www.iberia.com/us/iberia-plus/',
+  'Japan Airlines Mileage Bank':'https://www.jal.co.jp/jmb/en/',
+  'JetBlue TrueBlue':'https://www.jetblue.com/true-blue',
+  'Aer Lingus Avios':'https://www.aerlingus.com/aerclub/',
+  'Singapore KrisFlyer':'https://www.singaporeair.com/krisflyer',
+  'Southwest Rapid Rewards':'https://www.southwest.com/rapidrewards/',
+  'United MileagePlus':'https://www.united.com/en/us/fly/mileageplus.html',
+  'IHG One Rewards':'https://www.ihg.com/rewardsclub/',
+  'Avianca LifeMiles':'https://www.lifemiles.com/',
+  'EVA Air Infinity MileageLands':'https://www.evaair.com/en-global/infinity-mileagelands/',
+  'Qantas Frequent Flyer':'https://www.qantas.com/frequentflyer/',
+  'Qatar Airways Privilege Club':'https://www.qatarairways.com/en/privilege-club.html',
+  'Turkish Miles&Smiles':'https://www.milesandsmiles.com/',
+  'Choice Privileges':'https://www.choicehotels.com/choice-privileges',
+  'Wyndham Rewards':'https://www.wyndhamrewards.com/',
+  'American AAdvantage':'https://www.aa.com/aadvantage-program/',
+  'Finnair Plus':'https://www.finnair.com/en/finnair-plus',
+  'TAP Miles&Go':'https://www.flytap.com/en-us/milesgo',
+};
+function linkFor(name){ return PROGRAM_LINKS[name] || null; }
+function linkedName(name){
+  const url = linkFor(name);
+  return url ? `<a class="prog-link" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)}</a>` : escapeHtml(name);
+}
+function linkedNameLabel(fullName, label){
+  const url = linkFor(fullName);
+  return url ? `<a class="prog-link" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>` : escapeHtml(label);
+}
+
+
+const CURRENCY_PRESETS = [
+  'Amex Membership Rewards',
+  'Chase Ultimate Rewards',
+  'Citi ThankYou Points',
+  'Capital One Miles',
+  'Bilt Rewards',
+];
+
+// Default starter balances (only used the very first time, if storage is empty)
+const DEFAULT_CARDS = [
+  {id:cid(), currency:'Amex Membership Rewards', balance:0},
+  {id:cid(), currency:'Capital One Miles', balance:0},
+  {id:cid(), currency:'Bilt Rewards', balance:0},
+];
+
+// currency -> array of {to, ratio (dest points per 1 source point), note}
+const TRANSFER_MAP = {
+  'Amex Membership Rewards': [
+    {to:'Delta SkyMiles', ratio:1},
+    {to:'Air France-KLM Flying Blue', ratio:1},
+    {to:'ANA Mileage Club', ratio:1},
+    {to:'British Airways Avios', ratio:1},
+    {to:'Cathay Pacific Asia Miles', ratio:1},
+    {to:'Virgin Atlantic Flying Club', ratio:1},
+    {to:'Air Canada Aeroplan', ratio:1},
+    {to:'Emirates Skywards', ratio:1},
+    {to:'Etihad Guest', ratio:1},
+    {to:'Iberia Avios', ratio:1},
+    {to:'JetBlue TrueBlue', ratio:0.8, note:'5:4'},
+    {to:'Marriott Bonvoy', ratio:1},
+    {to:'Choice Privileges', ratio:1},
+  ],
+  'Chase Ultimate Rewards': [
+    {to:'Aer Lingus Avios', ratio:1},
+    {to:'Air Canada Aeroplan', ratio:1},
+    {to:'British Airways Avios', ratio:1},
+    {to:'Emirates Skywards', ratio:1},
+    {to:'Air France-KLM Flying Blue', ratio:1},
+    {to:'Iberia Avios', ratio:1},
+    {to:'JetBlue TrueBlue', ratio:1},
+    {to:'Singapore KrisFlyer', ratio:1},
+    {to:'Southwest Rapid Rewards', ratio:1},
+    {to:'United MileagePlus', ratio:1},
+    {to:'Virgin Atlantic Flying Club', ratio:1},
+    {to:'IHG One Rewards', ratio:1},
+    {to:'Marriott Bonvoy', ratio:1},
+    {to:'World of Hyatt', ratio:1},
+  ],
+  'Citi ThankYou Points': [
+    {to:'Air France-KLM Flying Blue', ratio:1},
+    {to:'Avianca LifeMiles', ratio:1},
+    {to:'Cathay Pacific Asia Miles', ratio:1},
+    {to:'Emirates Skywards', ratio:1},
+    {to:'EVA Air Infinity MileageLands', ratio:1},
+    {to:'JetBlue TrueBlue', ratio:1},
+    {to:'Qantas Frequent Flyer', ratio:1},
+    {to:'Qatar Airways Privilege Club', ratio:1},
+    {to:'Singapore KrisFlyer', ratio:1},
+    {to:'Turkish Miles&Smiles', ratio:1},
+    {to:'Virgin Atlantic Flying Club', ratio:1},
+    {to:'Choice Privileges', ratio:1},
+    {to:'Wyndham Rewards', ratio:1},
+  ],
+  'Capital One Miles': [
+    {to:'Air Canada Aeroplan', ratio:1},
+    {to:'Air France-KLM Flying Blue', ratio:1},
+    {to:'Avianca LifeMiles', ratio:1},
+    {to:'British Airways Avios', ratio:1},
+    {to:'Cathay Pacific Asia Miles', ratio:1},
+    {to:'Choice Privileges', ratio:1},
+    {to:'Emirates Skywards', ratio:1},
+    {to:'EVA Air Infinity MileageLands', ratio:1},
+    {to:'Finnair Plus', ratio:1},
+    {to:'JetBlue TrueBlue', ratio:0.6, note:'5:3'},
+    {to:'Japan Airlines Mileage Bank', ratio:0.75, note:'2:1.5'},
+    {to:'Qantas Frequent Flyer', ratio:1},
+    {to:'Singapore KrisFlyer', ratio:1},
+    {to:'TAP Miles&Go', ratio:1},
+    {to:'Turkish Miles&Smiles', ratio:1},
+    {to:'Virgin Atlantic Flying Club', ratio:1},
+    {to:'Wyndham Rewards', ratio:1},
+  ],
+  'Bilt Rewards': [
+    {to:'Atmos Rewards', ratio:1, note:'Alaska/Hawaiian'},
+    {to:'Avianca LifeMiles', ratio:1},
+    {to:'United MileagePlus', ratio:1},
+    {to:'Air France-KLM Flying Blue', ratio:1},
+    {to:'Virgin Atlantic Flying Club', ratio:1},
+    {to:'Emirates Skywards', ratio:1},
+    {to:'British Airways Avios', ratio:1},
+    {to:'Cathay Pacific Asia Miles', ratio:1},
+    {to:'Turkish Miles&Smiles', ratio:1},
+    {to:'Aer Lingus Avios', ratio:1},
+    {to:'Iberia Avios', ratio:1},
+    {to:'Japan Airlines Mileage Bank', ratio:1},
+    {to:'Air Canada Aeroplan', ratio:1},
+    {to:'TAP Miles&Go', ratio:1},
+    {to:'Southwest Rapid Rewards', ratio:1},
+    {to:'Marriott Bonvoy', ratio:1},
+    {to:'World of Hyatt', ratio:1},
+    {to:'IHG One Rewards', ratio:1},
+    {to:'Wyndham Rewards', ratio:1},
+  ],
+};
+
+// Concrete program -> category, used to filter the trip calculator and the overlap matrix.
+const HOTEL_PROGRAMS = new Set(['Marriott Bonvoy','Choice Privileges','IHG One Rewards','World of Hyatt','Wyndham Rewards']);
+function programType(name){
+  return HOTEL_PROGRAMS.has(name) ? 'hotel' : 'flight';
+}
+function getConcreteEdges(cur){
+  return (TRANSFER_MAP[cur] || []).filter(e=>!e.generic);
+}
+
+
+function renderExplorerSelect(){
+  const sel = document.getElementById('explorerCurrency');
+  const currencies = Object.keys(TRANSFER_MAP);
+  sel.innerHTML = currencies.map(c=>`<option value="${c}">${c}</option>`).join('');
+  sel.onchange = renderPartnerList;
+}
+function renderPartnerList(){
+  const cur = document.getElementById('explorerCurrency').value;
+  const partners = TRANSFER_MAP[cur] || [];
+  const el = document.getElementById('partnerList');
+  if(partners.length===0){
+    el.innerHTML = `<li><span class="empty-note">No outbound transfer partners — this is redeemed directly as its own currency.</span></li>`;
+    return;
+  }
+  el.innerHTML = partners.map(p=>{
+    const ratioLabel = p.ratio===1 ? '1 : 1' : (p.note || `${p.ratio} : 1`);
+    return `<li><span>${linkedName(p.to)}${p.note && p.ratio===1 ? ` <span class="empty-note">(${escapeHtml(p.note)})</span>`:''}</span><span class="ratio">${ratioLabel}</span></li>`;
+  }).join('');
+}
+
+
+renderExplorerSelect();
+renderPartnerList();
+</script>
+</body>
+</html>
