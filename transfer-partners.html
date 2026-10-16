@@ -7,17 +7,17 @@
 <meta name="description" content="Pick a credit card points currency to see every airline and hotel partner it transfers to, and at what ratio.">
 <style>
   :root{
-    --ink:#132235;
-    --ink-2:#1c3752;
-    --paper:#efeade;
-    --paper-2:#e4dcc9;
-    --brass:#b8863b;
-    --brass-dark:#8f6526;
-    --teal:#1f4b46;
+    --ink:#0B0B0C;
+    --ink-2:#221B33;
+    --paper:#F6F4FA;
+    --paper-2:#ECE7F5;
+    --brass:#7B3FE4;
+    --brass-dark:#5A23B8;
+    --teal:#3E2072;
     --stamp:#a4372f;
-    --line:#c9bfa4;
-    --text:#1b2432;
-    --text-dim:#5a6270;
+    --line:#D9D1EA;
+    --text:#16131D;
+    --text-dim:#5B5566;
     --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
@@ -47,7 +47,7 @@
     font-size:12px;
     font-weight:700;
     letter-spacing:0.02em;
-    color:#fff8ec;
+    color:#F4EEFE;
     background:linear-gradient(135deg, var(--teal), var(--ink-2));
     border:1px solid var(--brass);
     border-radius:20px;
@@ -75,7 +75,7 @@
     content:"";
     position:absolute; right:-40px; top:-40px;
     width:180px;height:180px;border-radius:50%;
-    background:radial-gradient(circle, rgba(184,134,59,0.25), transparent 70%);
+    background:radial-gradient(circle, rgba(123,63,228,0.25), transparent 70%);
   }
   .hero-eyebrow{
     font-family:var(--mono);
@@ -94,23 +94,23 @@
   .hero p{
     margin:0;
     max-width:56ch;
-    color:#c9d3d9;
+    color:#CFC9DA;
     font-size:14.5px;
   }
   .hero-stats{
     display:flex; gap:22px; margin-top:20px; flex-wrap:wrap;
   }
   .hero-stat .n{font-family:var(--mono); font-size:22px; color:var(--paper); font-weight:700;}
-  .hero-stat .l{font-size:11.5px; color:#93a0a8;}
+  .hero-stat .l{font-size:11.5px; color:#9A93A8;}
   .hero-warning{
     margin-top:18px;
     padding:11px 14px;
-    background:rgba(184,134,59,0.14);
-    border:1px solid rgba(184,134,59,0.4);
+    background:rgba(123,63,228,0.14);
+    border:1px solid rgba(123,63,228,0.4);
     border-radius:8px;
     font-size:12.5px;
     line-height:1.5;
-    color:#e9dfc9;
+    color:#E6E0F0;
   }
   .hero-warning strong{color:var(--brass); font-weight:700;}
 
@@ -140,7 +140,7 @@
   details.more-tools{margin:0 0 20px;}
   details.more-tools > summary{
     cursor:pointer; list-style:none;
-    background:#fff8ec; border:1px dashed var(--brass); border-radius:10px;
+    background:#F4EEFE; border:1px dashed var(--brass); border-radius:10px;
     padding:12px 16px; font-weight:700; font-size:14px; color:var(--ink);
   }
   details.more-tools > summary::-webkit-details-marker{display:none;}
@@ -154,7 +154,7 @@
   .pathway-head{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:14px 0 4px; font-weight:700;}
   .pathway-list{display:grid; gap:10px; margin-top:12px;}
   .pathway{
-    border:1px solid var(--line); border-radius:9px; background:#fffefb;
+    border:1px solid var(--line); border-radius:9px; background:#FFFFFF;
     padding:12px 14px;
   }
   .pathway.reachable{border-color:#2f8f52; box-shadow:inset 4px 0 0 #2f8f52;}
@@ -182,14 +182,14 @@
   .ratio-changed{color:#a4372f !important; font-weight:700;}
   .reserve-toggle{
     display:flex; gap:10px; align-items:flex-start; margin-top:14px;
-    padding:10px 12px; border:1px dashed var(--brass); border-radius:8px; background:#fffaf0;
+    padding:10px 12px; border:1px dashed var(--brass); border-radius:8px; background:#FAF8FD;
     font-size:13px; cursor:pointer;
   }
   .reserve-toggle input{margin-top:3px; width:18px; height:18px; flex:0 0 auto;}
   .reserve-toggle small{display:block; color:var(--text-dim); font-size:12px; margin-top:2px;}
   .matrix-note{font-size:12px; color:#6b4a12; margin-top:8px;}
   .eval-context{
-    background:#fff8ec; border:1px solid var(--brass); border-radius:9px;
+    background:#F4EEFE; border:1px solid var(--brass); border-radius:9px;
     padding:10px 14px; margin:0 0 14px; font-size:13.5px;
   }
   .eval-context:empty{display:none;}
@@ -201,7 +201,7 @@
 
   /* ---------- SECTION SHELL ---------- */
   section.panel{
-    background:#fff8ec;
+    background:#F4EEFE;
     border:1px solid var(--line);
     border-radius:10px;
     margin-bottom:20px;
@@ -225,7 +225,7 @@
     padding:10px 12px;
     border:1px solid var(--line);
     border-radius:8px;
-    background:#fffefb;
+    background:#FFFFFF;
     margin-bottom:8px;
   }
   .card-row .cname{font-weight:600; font-size:14px;}
@@ -278,7 +278,7 @@
     border:1px solid var(--line);
     border-radius:8px;
     padding:12px 14px;
-    background:#fffefb;
+    background:#FFFFFF;
   }
   .ledger-tile .cur{font-size:12px; font-weight:700; color:var(--ink-2);}
   .ledger-tile .pts{font-family:var(--mono); font-size:21px; font-weight:700; margin-top:4px;}
@@ -324,7 +324,7 @@
     border-radius:8px;
     padding:10px 12px;
     margin-bottom:10px;
-    background:#fffefb;
+    background:#FFFFFF;
   }
   .leg-row-head{
     display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;
@@ -353,7 +353,7 @@
   .timeline-dot{
     position:absolute; left:-28px; top:0; width:22px; height:22px; border-radius:50%;
     display:flex; align-items:center; justify-content:center; font-size:11px;
-    background:var(--brass); color:#fff; box-shadow:0 0 0 3px #fffefb;
+    background:var(--brass); color:#fff; box-shadow:0 0 0 3px #FFFFFF;
   }
   .timeline-dot.hotel{background:var(--teal);}
   .timeline-dot.activity{background:var(--stamp);}
@@ -378,7 +378,7 @@
   }
   .cost-amt{font-family:var(--mono); font-weight:700;}
   .trip-summary{
-    font-size:12.5px; color:#c9d3d9; margin-top:2px;
+    font-size:12.5px; color:#CFC9DA; margin-top:2px;
   }
 
   /* ---------- CENTS PER POINT CALCULATOR ---------- */
@@ -403,7 +403,7 @@
   .cpp-detail{font-size:13px; color:var(--text-dim); margin:0 0 6px;}
   .cpp-verdict{font-size:13.5px; font-weight:600; margin:0;}
   .cpp-savings{margin:12px 0;}
-  .cpp-save-tile{background:#fffaf0; border:1px solid var(--line); border-radius:8px; padding:12px 14px;}
+  .cpp-save-tile{background:#FAF8FD; border:1px solid var(--line); border-radius:8px; padding:12px 14px;}
   .cpp-save-tile .amt{font-size:22px; font-weight:800; line-height:1.2;}
   .cpp-save-tile .amt.pos{color:#1f6b3f;}
   .cpp-save-tile .amt.neg{color:#8f4324;}
@@ -429,7 +429,7 @@
     display:flex; align-items:center; gap:6px;
     font-size:13px; padding:6px 11px;
     border:1px solid var(--line); border-radius:20px;
-    background:#fffefb; cursor:pointer; user-select:none;
+    background:#FFFFFF; cursor:pointer; user-select:none;
   }
   .chk-pill input{margin:0;}
   .chk-pill.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
@@ -451,13 +451,13 @@
   table.matrix-table td:first-child, table.matrix-table th:first-child{
     text-align:left; font-weight:600; color:var(--text); white-space:normal;
   }
-  table.matrix-table tr.overlap-row{background:#fbf1de;}
+  table.matrix-table tr.overlap-row{background:#F1EBFD;}
   table.matrix-table tr.overlap-row td:first-child{color:var(--brass-dark); font-weight:700;}
   .cell-yes{color:var(--teal); font-family:var(--mono); font-weight:700;}
   .cell-no{color:var(--line);}
   .prog-link{color:inherit; text-decoration:underline; text-decoration-color:var(--brass); text-underline-offset:2px;}
   .prog-link:hover{color:var(--brass-dark);}
-  table.matrix-table th .prog-link, .trip-card-head .prog-link{text-decoration-color:rgba(184,134,59,0.6);}
+  table.matrix-table th .prog-link, .trip-card-head .prog-link{text-decoration-color:rgba(123,63,228,0.6);}
 
   /* ---------- ALLIANCE FINDER ---------- */
   .alliance-filters{
@@ -484,12 +484,12 @@
   }
   .alliance-partner{
     border:1px solid var(--line); border-radius:7px; padding:8px 11px;
-    background:#fffefb; font-size:13px;
+    background:#FFFFFF; font-size:13px;
   }
   .trip-card{
     border:1px solid var(--line);
     border-radius:8px;
-    background:#fffefb;
+    background:#FFFFFF;
     margin-top:14px;
     overflow:hidden;
   }
@@ -527,7 +527,7 @@
   }
   .leg-hint{font-size:12px; color:var(--text-dim); margin:2px 0 6px;}
 
-  .trip-remove{background:none;border:none;color:#c9d3d9;cursor:pointer;font-size:12px;}
+  .trip-remove{background:none;border:none;color:#CFC9DA;cursor:pointer;font-size:12px;}
   .trip-remove:hover{color:#fff; text-decoration:underline;}
 
   .disclaimer{
