@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img" aria-label="dadhattravel avatar: a head wearing a purple dad hat">
+<defs><clipPath id="c"><circle cx="150" cy="150" r="145"/></clipPath></defs>
+<circle cx="150" cy="150" r="145" fill="#0B0B0C"/>
+<g clip-path="url(#c)">
+<svg x="30" y="48" width="240" height="204" viewBox="-10 10 370 315">
+<g fill="#FFFFFF">
+<ellipse cx="150" cy="200" rx="92" ry="100"/>
+</g>
+<g transform="rotate(12 180 120)">
+<g fill="#FFFFFF" stroke="#FFFFFF" stroke-width="14" stroke-linejoin="round">
+<path d="M50 166 L12 171 C6 172 6 186 12 186 L50 182 Z"/>
+<path d="M47 181 C45 120 80 50 131 44 C190 38 245 60 263 118 C230 132 190 152 149 172 C110 178 75 182 47 181 Z"/>
+<path d="M146 175 C190 150 228 126 263 116 C300 126 330 138 350 148 C358 156 350 166 338 166 C312 178 296 192 280 198 C236 194 190 186 146 178 Z"/>
+<rect x="119" y="39" width="26" height="9" rx="4" transform="rotate(-6 132 44)"/>
+</g>
+<g>
+<path d="M50 166 L12 171 C6 172 6 186 12 186 L50 182 Z" fill="#3E2072" stroke="#0B0B0C" stroke-width="4" stroke-linejoin="round"/>
+<path d="M47 181 C45 120 80 50 131 44 C190 38 245 60 263 118 C230 132 190 152 149 172 C110 178 75 182 47 181 Z" fill="#7B3FE4" stroke="#0B0B0C" stroke-width="5" stroke-linejoin="round"/>
+<path d="M50 178 C48 122 82 54 129 48 C110 82 104 130 108 180 C88 181 66 180 50 178 Z" fill="#000000" fill-opacity="0.1"/>
+<path d="M131 48 C120 90 118 140 124 178" stroke="#0B0B0C" stroke-opacity="0.55" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<g fill="#FFFFFF" transform="translate(196 112) rotate(14 0 -8)"><path transform="translate(-16.26 0)" d="M0.837890625 0.0V-18.90625H6.037109375Q8.078125 -18.90625 9.109375 -17.77294921875Q10.140625 -16.6396484375 10.140625 -14.458984375V-5.607421875Q10.140625 -2.921875 9.20068359375 -1.4609375Q8.2607421875 0.0 5.908203125 0.0ZM4.640625 -3.3408203125H5.2958984375Q6.337890625 -3.3408203125 6.337890625 -4.3505859375V-14.1044921875Q6.337890625 -15.0498046875 6.08544921875 -15.32373046875Q5.8330078125 -15.59765625 5.0595703125 -15.59765625H4.640625Z M12.6875 0.0V-18.90625H16.447265625V-12.1494140625H18.23046875V-18.90625H21.990234375V0.0H18.23046875V-8.572265625H16.447265625V0.0Z M26.2880859375 0.0V-15.275390625H24.04296875V-18.90625H32.314453125V-15.275390625H30.0693359375V0.0Z"/></g>
+<path d="M146 175 C190 150 228 126 263 116 C300 126 330 138 350 148 C358 156 350 166 338 166 C312 178 296 192 280 198 C236 194 190 186 146 178 Z" fill="#7B3FE4" stroke="#0B0B0C" stroke-width="5" stroke-linejoin="round"/>
+<path d="M338 166 C350 166 358 156 350 148 C346 157 340 160 328 162 Z" fill="#3E2072"/>
+<path d="M170 182 C210 188 248 191 276 190 C296 184 314 172 332 160" stroke="#0B0B0C" stroke-opacity="0.5" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<path d="M176 176 C212 182 248 184 272 183 C292 177 308 166 326 155" stroke="#0B0B0C" stroke-opacity="0.5" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<rect x="119" y="39" width="26" height="9" rx="4" fill="#7B3FE4" stroke="#0B0B0C" stroke-width="4" transform="rotate(-6 132 44)"/>
+</g>
+</g>
+</svg>
+</g>
+<circle cx="150" cy="150" r="145" fill="none" stroke="#FFFFFF" stroke-width="10"/>
+</svg>

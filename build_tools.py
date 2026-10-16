@@ -97,6 +97,7 @@ for t in TOOLS:
 <meta name="description" content="{t["lede"]}">
 {head_css}
 <style>.topnav{{position:static;}}</style>
+<link rel="icon" type="image/svg+xml" href="avatar.svg">
 </head>
 <body>
 <div class="wrap">
